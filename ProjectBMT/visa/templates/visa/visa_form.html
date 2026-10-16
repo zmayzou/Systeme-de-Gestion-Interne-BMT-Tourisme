@@ -1,0 +1,298 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Visa - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+    {% if visa %}
+        Modifier la demande de visa
+    {% else %}
+        Nouvelle demande de visa
+    {% endif %}
+
+</h2>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                {% if not visa %}
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Dossier
+                    </label>
+
+                    <select name="dossier" class="form-select" required>
+
+                        <option value="">
+                            Choisir un dossier Visa
+                        </option>
+
+                        {% for dossier in dossiers %}
+
+                            <option value="{{ dossier.id }}">
+                                {{ dossier.numero_dossier }}
+                                -
+                                {{ dossier.client.nom }}
+                                {{ dossier.client.prenom }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% else %}
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Dossier
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ visa.dossier.numero_dossier }}"
+                        disabled
+                    >
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Responsable Visa
+                    </label>
+
+                    <select name="responsable" class="form-select">
+
+                        <option value="">
+                            Non assigné
+                        </option>
+
+                        {% for emp in responsables %}
+
+                            <option
+                                value="{{ emp.id }}"
+                                {% if visa.responsable_id == emp.id %}selected{% endif %}
+                            >
+                                {{ emp }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Pays de destination
+                    </label>
+
+                    <input
+                        type="text"
+                        name="pays_destination"
+                        class="form-control"
+                        value="{{ visa.pays_destination|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Type de visa
+                    </label>
+
+                    <input
+                        type="text"
+                        name="type_visa"
+                        class="form-control"
+                        value="{{ visa.type_visa|default:'' }}"
+                        placeholder="Touristique, Affaires..."
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Statut
+                    </label>
+
+                    <select name="statut" class="form-select">
+
+                        <option
+                            value="DOCUMENTS_MANQUANTS"
+                            {% if not visa or visa.statut == "DOCUMENTS_MANQUANTS" %}selected{% endif %}
+                        >
+                            Documents manquants
+                        </option>
+
+                        <option
+                            value="DOCUMENTS_COMPLETS"
+                            {% if visa.statut == "DOCUMENTS_COMPLETS" %}selected{% endif %}
+                        >
+                            Documents complets
+                        </option>
+
+                        <option
+                            value="DOSSIER_PRET"
+                            {% if visa.statut == "DOSSIER_PRET" %}selected{% endif %}
+                        >
+                            Dossier prêt
+                        </option>
+
+                        <option
+                            value="DEPOSE"
+                            {% if visa.statut == "DEPOSE" %}selected{% endif %}
+                        >
+                            Déposé
+                        </option>
+
+                        <option
+                            value="EN_TRAITEMENT"
+                            {% if visa.statut == "EN_TRAITEMENT" %}selected{% endif %}
+                        >
+                            En traitement
+                        </option>
+
+                        <option
+                            value="ACCEPTE"
+                            {% if visa.statut == "ACCEPTE" %}selected{% endif %}
+                        >
+                            Accepté
+                        </option>
+
+                        <option
+                            value="REFUSE"
+                            {% if visa.statut == "REFUSE" %}selected{% endif %}
+                        >
+                            Refusé
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Numéro de demande
+                    </label>
+
+                    <input
+                        type="text"
+                        name="numero_demande"
+                        class="form-control"
+                        value="{{ visa.numero_demande|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Date rendez-vous
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date_rendez_vous"
+                        class="form-control"
+                        value="{% if visa.date_rendez_vous %}{{ visa.date_rendez_vous|date:'Y-m-d' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Date dépôt
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date_depot"
+                        class="form-control"
+                        value="{% if visa.date_depot %}{{ visa.date_depot|date:'Y-m-d' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Date résultat
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date_resultat"
+                        class="form-control"
+                        value="{% if visa.date_resultat %}{{ visa.date_resultat|date:'Y-m-d' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="col-12 mb-3">
+
+                    <label class="form-label">
+                        Commentaire
+                    </label>
+
+                    <textarea
+                        name="commentaire"
+                        class="form-control"
+                        rows="4"
+                    >{{ visa.commentaire|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit" class="btn btn-success">
+                Enregistrer
+            </button>
+
+            <a href="{% url 'visa_list' %}" class="btn btn-secondary">
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

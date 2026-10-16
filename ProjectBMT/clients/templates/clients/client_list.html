@@ -1,0 +1,1066 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Clients - BMT Tourisme
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       CLIENT PAGE
+    ===================================================== */
+
+    .clients-page {
+        max-width: 1700px;
+        margin: 0 auto;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .clients-header {
+        position: relative;
+        overflow: hidden;
+        padding: 25px 27px;
+        margin-bottom: 22px;
+        border: 1px solid #e5e8f1;
+        border-radius: 21px;
+        background:
+            radial-gradient(
+                circle at 95% 10%,
+                rgba(48, 72, 165, .10),
+                transparent 28%
+            ),
+            white;
+        box-shadow: 0 10px 32px rgba(25, 39, 87, .05);
+    }
+
+    .clients-header::after {
+        content: "";
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        right: -70px;
+        top: -100px;
+        border: 25px solid rgba(38, 61, 153, .035);
+        border-radius: 50%;
+    }
+
+    .clients-header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .page-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-title-icon {
+        width: 49px;
+        height: 49px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: #eef1ff;
+        color: var(--bmt-blue);
+        font-size: 20px;
+    }
+
+    .page-eyebrow {
+        margin-bottom: 3px;
+        color: var(--bmt-blue);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+    }
+
+    .page-main-title {
+        margin: 0;
+        color: var(--bmt-text);
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -.6px;
+    }
+
+    .page-description {
+        margin: 5px 0 0;
+        color: var(--bmt-muted);
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       ADD BUTTON
+    ===================================================== */
+
+    .add-client-btn {
+        min-height: 43px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 16px;
+        border-radius: 12px;
+        background:
+            linear-gradient(
+                135deg,
+                var(--bmt-blue),
+                var(--bmt-navy)
+            );
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        box-shadow: 0 8px 20px rgba(38,61,153,.17);
+        transition: all .2s ease;
+    }
+
+    .add-client-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(38,61,153,.23);
+    }
+
+    .add-client-btn-icon {
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: rgba(255,255,255,.13);
+    }
+
+
+    /* =====================================================
+       TOOLBAR
+    ===================================================== */
+
+    .client-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .client-search {
+        position: relative;
+        width: min(520px, 100%);
+    }
+
+    .client-search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        z-index: 3;
+        transform: translateY(-50%);
+        color: #9299aa;
+        font-size: 14px;
+    }
+
+    .client-search input {
+        width: 100%;
+        height: 46px;
+        padding: 0 105px 0 42px;
+        border: 1px solid #e0e4ed;
+        border-radius: 13px;
+        outline: 0;
+        background: white;
+        color: var(--bmt-text);
+        font-size: 11px;
+        box-shadow: 0 5px 18px rgba(25,39,87,.035);
+        transition: all .2s ease;
+    }
+
+    .client-search input:focus {
+        border-color: #8797db;
+        box-shadow: 0 0 0 4px rgba(48,72,165,.07);
+    }
+
+    .client-search button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        height: 36px;
+        padding: 0 13px;
+        border: 0;
+        border-radius: 9px;
+        background: #f0f2f8;
+        color: var(--bmt-navy);
+        font-size: 9px;
+        font-weight: 700;
+        transition: all .2s ease;
+    }
+
+    .client-search button:hover {
+        color: white;
+        background: var(--bmt-blue);
+    }
+
+    .clear-search {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        background: #fff0f1;
+        color: var(--bmt-red);
+    }
+
+    .client-counter {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--bmt-muted);
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .client-counter-number {
+        min-width: 31px;
+        height: 31px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #eef1ff;
+        color: var(--bmt-blue);
+        font-weight: 800;
+    }
+
+
+    /* =====================================================
+       TABLE CONTAINER
+    ===================================================== */
+
+    .client-table-card {
+        overflow: hidden;
+        border: 1px solid var(--bmt-border);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(25,39,87,.05);
+    }
+
+    .client-table-head {
+        min-height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 19px;
+        border-bottom: 1px solid var(--bmt-border);
+    }
+
+    .table-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .table-heading-icon {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #eef1ff;
+        color: var(--bmt-blue);
+        font-size: 14px;
+    }
+
+    .table-heading-title {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--bmt-text);
+    }
+
+    .table-heading-subtitle {
+        margin-top: 2px;
+        color: var(--bmt-muted);
+        font-size: 8px;
+    }
+
+
+    /* =====================================================
+       CLIENT
+    ===================================================== */
+
+    .client-identity {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 190px;
+    }
+
+    .client-avatar {
+        width: 39px;
+        height: 39px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background:
+            linear-gradient(
+                135deg,
+                #eef1ff,
+                #e3e7fa
+            );
+        color: var(--bmt-blue);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .client-full-name {
+        color: var(--bmt-text);
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .client-email {
+        max-width: 190px;
+        margin-top: 2px;
+        overflow: hidden;
+        color: var(--bmt-muted);
+        font-size: 8px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cin-code {
+        display: inline-flex;
+        padding: 5px 8px;
+        border-radius: 7px;
+        background: #f5f6fa;
+        color: #5c657b;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
+
+    .phone-value {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #4d566c;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .phone-value i {
+        color: #9ba2b2;
+    }
+
+
+    /* =====================================================
+       CLIENT TYPE
+    ===================================================== */
+
+    .client-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 9px;
+        border-radius: 30px;
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .client-type::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+    .client-type-new {
+        background: #eef1ff;
+        color: #3048a5;
+    }
+
+    .client-type-new::before {
+        background: #3048a5;
+    }
+
+    .client-type-loyal {
+        background: #eaf8f3;
+        color: #138a65;
+    }
+
+    .client-type-loyal::before {
+        background: #138a65;
+    }
+
+
+    /* =====================================================
+       ADVANCE
+    ===================================================== */
+
+    .advance-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .advance-status.yes {
+        color: #138a65;
+    }
+
+    .advance-status.no {
+        color: #8b93a6;
+    }
+
+    .advance-icon {
+        width: 23px;
+        height: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+    }
+
+    .advance-status.yes .advance-icon {
+        background: #eaf8f3;
+    }
+
+    .advance-status.no .advance-icon {
+        background: #f2f3f7;
+    }
+
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .client-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .client-action-btn {
+        width: 33px;
+        height: 33px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 9px;
+        font-size: 12px;
+        transition: all .2s ease;
+    }
+
+    .client-action-edit {
+        background: #fff6e8;
+        color: #c77b1d;
+    }
+
+    .client-action-edit:hover {
+        background: #e78b25;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .client-action-delete {
+        background: #fff0f1;
+        color: var(--bmt-red);
+    }
+
+    .client-action-delete:hover {
+        background: var(--bmt-red);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .clients-empty {
+        padding: 65px 20px !important;
+        text-align: center;
+    }
+
+    .clients-empty-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 17px;
+        background: #f1f3f8;
+        color: #9aa2b4;
+        font-size: 23px;
+    }
+
+    .clients-empty-title {
+        color: var(--bmt-text);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .clients-empty-text {
+        margin-top: 4px;
+        color: var(--bmt-muted);
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 767px) {
+
+        .clients-header-content {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .add-client-btn {
+            width: 100%;
+        }
+
+        .client-toolbar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .client-counter {
+            justify-content: flex-end;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="clients-page">
+
+
+    <!-- ================================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ================================================= -->
+
+    <div class="clients-header">
+
+        <div class="clients-header-content">
+
+
+            <div class="page-title-wrap">
+
+                <div class="page-title-icon">
+                    <i class="bi bi-person-vcard"></i>
+                </div>
+
+
+                <div>
+
+                    <div class="page-eyebrow">
+                        CRM • BMT Tourisme
+                    </div>
+
+                    <h1 class="page-main-title">
+                        Gestion des clients
+                    </h1>
+
+                    <p class="page-description">
+                        Consultez et gérez les clients enregistrés dans votre agence.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{% url 'client_create' %}"
+                class="add-client-btn"
+            >
+
+                <span class="add-client-btn-icon">
+                    <i class="bi bi-plus-lg"></i>
+                </span>
+
+                Ajouter un client
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEARCH -->
+    <!-- ================================================= -->
+
+    <div class="client-toolbar">
+
+
+        <div class="d-flex align-items-center gap-2 flex-grow-1">
+
+            <form
+                method="GET"
+                class="client-search"
+            >
+
+                <i class="bi bi-search client-search-icon"></i>
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="Rechercher par nom, prénom, CIN ou téléphone..."
+                    autocomplete="off"
+                >
+
+                <button type="submit">
+
+                    <i class="bi bi-search me-1"></i>
+
+                    Rechercher
+
+                </button>
+
+            </form>
+
+
+            {% if query %}
+
+                <a
+                    href="{% url 'client_list' %}"
+                    class="clear-search"
+                    title="Effacer la recherche"
+                >
+
+                    <i class="bi bi-x-lg"></i>
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="client-counter">
+
+            <span class="client-counter-number">
+                {{ clients|length }}
+            </span>
+
+            client{{ clients|length|pluralize }}
+
+            {% if query %}
+                trouvé{{ clients|length|pluralize }}
+            {% else %}
+                enregistré{{ clients|length|pluralize }}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CLIENT TABLE -->
+    <!-- ================================================= -->
+
+    <div class="client-table-card">
+
+
+        <div class="client-table-head">
+
+            <div class="table-heading">
+
+                <div class="table-heading-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+
+                <div>
+
+                    <div class="table-heading-title">
+                        Répertoire clients
+                    </div>
+
+                    <div class="table-heading-subtitle">
+
+                        {% if query %}
+
+                            Résultats pour « {{ query }} »
+
+                        {% else %}
+
+                            Liste des clients accessibles
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Client
+                        </th>
+
+                        <th>
+                            CIN
+                        </th>
+
+                        <th>
+                            Téléphone
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Avance
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for client in clients %}
+
+                        <tr>
+
+
+                            <!-- CLIENT -->
+
+                            <td>
+
+                                <div class="client-identity">
+
+                                    <div class="client-avatar">
+
+                                        {{ client.prenom|slice:":1"|upper }}
+
+                                        {{ client.nom|slice:":1"|upper }}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="client-full-name">
+
+                                            {{ client.prenom }}
+                                            {{ client.nom }}
+
+                                        </div>
+
+
+                                        <div class="client-email">
+
+                                            {% if client.email %}
+
+                                                {{ client.email }}
+
+                                            {% elif client.passeport %}
+
+                                                Passeport :
+                                                {{ client.passeport }}
+
+                                            {% else %}
+
+                                                Client BMT Tourisme
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- CIN -->
+
+                            <td>
+
+                                {% if client.cin %}
+
+                                    <span class="cin-code">
+                                        {{ client.cin }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- PHONE -->
+
+                            <td>
+
+                                <div class="phone-value">
+
+                                    <i class="bi bi-telephone"></i>
+
+                                    {{ client.telephone }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- TYPE -->
+
+                            <td>
+
+                                {% if client.type_client == 'FIDELE' %}
+
+                                    <span class="client-type client-type-loyal">
+
+                                        Fidèle
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="client-type client-type-new">
+
+                                        Nouveau
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ADVANCE -->
+
+                            <td>
+
+                                {% if client.autorise_sans_avance %}
+
+                                    <span class="advance-status yes">
+
+                                        <span class="advance-icon">
+
+                                            <i class="bi bi-check-lg"></i>
+
+                                        </span>
+
+                                        Sans avance
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="advance-status no">
+
+                                        <span class="advance-icon">
+
+                                            <i class="bi bi-dash-lg"></i>
+
+                                        </span>
+
+                                        Avance requise
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="client-actions">
+
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        href="{% url 'client_update' client.id %}"
+                                        class="client-action-btn client-action-edit"
+                                        title="Modifier"
+                                    >
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+
+                                    <!-- DELETE -->
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'client_delete' client.id %}"
+                                        class="m-0"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce client ?');"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="client-action-btn client-action-delete"
+                                            title="Supprimer"
+                                        >
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </button>
+
+                                    </form>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% empty %}
+
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="clients-empty"
+                            >
+
+                                <div class="clients-empty-icon">
+
+                                    {% if query %}
+
+                                        <i class="bi bi-search"></i>
+
+                                    {% else %}
+
+                                        <i class="bi bi-people"></i>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="clients-empty-title">
+
+                                    {% if query %}
+
+                                        Aucun résultat
+
+                                    {% else %}
+
+                                        Aucun client enregistré
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="clients-empty-text">
+
+                                    {% if query %}
+
+                                        Aucun client ne correspond à votre recherche.
+
+                                    {% else %}
+
+                                        Les clients ajoutés apparaîtront ici.
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                {% if query %}
+
+                                    <a
+                                        href="{% url 'client_list' %}"
+                                        class="btn btn-light mt-3"
+                                    >
+
+                                        <i class="bi bi-arrow-left me-1"></i>
+
+                                        Voir tous les clients
+
+                                    </a>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

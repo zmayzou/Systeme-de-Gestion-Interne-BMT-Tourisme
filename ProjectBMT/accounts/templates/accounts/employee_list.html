@@ -1,0 +1,150 @@
+{% extends 'accounts/base.html' %}
+{% load permission_tags %}
+
+{% block title %}
+Employés - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Employés</h2>
+        <p class="text-muted mb-0">
+            Gestion des employés
+        </p>
+    </div>
+
+    {% if request.user|has_perm_metier:"employees.manage" %}
+        <a href="{% url 'employee_create' %}"
+           class="btn btn-primary">
+            Ajouter un employé
+        </a>
+    {% endif %}
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Username</th>
+                        <th>Rôle</th>
+                        <th>Agence</th>
+                        <th>Téléphone</th>
+                        <th>Poste</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for emp in employes %}
+
+                        <tr>
+
+                            <td>
+                                {{ emp.user.get_full_name|default:"-" }}
+                            </td>
+
+                            <td>
+                                {{ emp.user.username }}
+                            </td>
+
+                            <td>
+                                {% if emp.role %}
+                                    {{ emp.role.nom }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if emp.agence %}
+                                    {{ emp.agence }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ emp.telephone|default:"-" }}
+                            </td>
+
+                            <td>
+                                {{ emp.poste|default:"-" }}
+                            </td>
+
+                            <td>
+                                {% if emp.est_actif %}
+                                    <span class="badge bg-success">
+                                        Actif
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        Inactif
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                {% if request.user|has_perm_metier:"employees.manage" %}
+
+                                    <a href="{% url 'employee_update' emp.id %}"
+                                       class="btn btn-sm btn-warning">
+                                        Modifier
+                                    </a>
+
+                                    <a href="{% url 'employee_toggle_active' emp.id %}"
+                                       class="btn btn-sm
+                                       {% if emp.est_actif %}
+                                           btn-danger
+                                       {% else %}
+                                           btn-success
+                                       {% endif %}">
+                                        {% if emp.est_actif %}
+                                            Désactiver
+                                        {% else %}
+                                            Activer
+                                        {% endif %}
+                                    </a>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+                            <td colspan="8"
+                                class="text-center text-muted">
+                                Aucun employé.
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

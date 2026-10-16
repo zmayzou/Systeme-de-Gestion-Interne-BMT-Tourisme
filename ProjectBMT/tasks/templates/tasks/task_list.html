@@ -1,0 +1,277 @@
+{% extends 'accounts/base.html' %}
+{% load permission_tags %}
+
+{% block title %}
+Tâches - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            {% if can_assign %}
+                Gestion des tâches
+            {% else %}
+                Mes tâches
+            {% endif %}
+        </h2>
+
+        <p class="text-muted mb-0">
+            {% if can_assign %}
+                Suivi et gestion des tâches des employés
+            {% else %}
+                Suivi de vos tâches assignées
+            {% endif %}
+        </p>
+    </div>
+
+    {% if request.user|has_perm_metier:"tasks.create" %}
+        <a
+            href="{% url 'task_create' %}"
+            class="btn btn-primary"
+        >
+            Ajouter une tâche
+        </a>
+    {% endif %}
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Tâche</th>
+                        <th>Dossier</th>
+                        <th>Client</th>
+                        <th>Responsable</th>
+                        <th>Priorité</th>
+                        <th>Statut</th>
+                        <th>Échéance</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for tache in taches %}
+
+                        <tr>
+
+                            <!-- TACHE -->
+
+                            <td>
+                                <strong>
+                                    {{ tache.titre }}
+                                </strong>
+                            </td>
+
+
+                            <!-- DOSSIER -->
+
+                            <td>
+
+                                <a href="{% url 'dossier_detail' tache.dossier.id %}">
+                                    {{ tache.dossier.numero_dossier }}
+                                </a>
+
+                            </td>
+
+
+                            <!-- CLIENT -->
+
+                            <td>
+
+                                {{ tache.dossier.client.nom }}
+                                {{ tache.dossier.client.prenom }}
+
+                            </td>
+
+
+                            <!-- RESPONSABLE -->
+
+                            <td>
+
+                                {% if tache.responsable %}
+
+                                    {{ tache.responsable }}
+
+                                    {% if tache.responsable.role %}
+
+                                        <div class="small text-muted">
+                                            {{ tache.responsable.role.nom }}
+                                        </div>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Non assignée
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- PRIORITE -->
+
+                            <td>
+
+                                {% if tache.priorite == "URGENTE" %}
+
+                                    <span class="badge bg-danger">
+                                        {{ tache.get_priorite_display }}
+                                    </span>
+
+                                {% elif tache.priorite == "HAUTE" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ tache.get_priorite_display }}
+                                    </span>
+
+                                {% elif tache.priorite == "MOYENNE" %}
+
+                                    <span class="badge bg-info text-dark">
+                                        {{ tache.get_priorite_display }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ tache.get_priorite_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUT -->
+
+                            <td>
+
+                                {% if tache.statut == "TERMINEE" %}
+
+                                    <span class="badge bg-success">
+                                        {{ tache.get_statut_display }}
+                                    </span>
+
+                                {% elif tache.statut == "EN_COURS" %}
+
+                                    <span class="badge bg-primary">
+                                        {{ tache.get_statut_display }}
+                                    </span>
+
+                                {% elif tache.statut == "EN_ATTENTE" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ tache.get_statut_display }}
+                                    </span>
+
+                                {% elif tache.statut == "ANNULEE" %}
+
+                                    <span class="badge bg-danger">
+                                        {{ tache.get_statut_display }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ tache.get_statut_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ECHEANCE -->
+
+                            <td>
+
+                                {% if tache.date_echeance %}
+
+                                    {{ tache.date_echeance|date:"d/m/Y H:i" }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <a
+                                    href="{% url 'task_detail' tache.id %}"
+                                    class="btn btn-sm btn-info"
+                                >
+                                    Voir
+                                </a>
+
+                                {% if request.user|has_perm_metier:"tasks.update" %}
+
+                                    <a
+                                        href="{% url 'task_update' tache.id %}"
+                                        class="btn btn-sm btn-warning"
+                                    >
+                                        Modifier
+                                    </a>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="text-center text-muted py-4"
+                            >
+
+                                {% if can_assign %}
+                                    Aucune tâche enregistrée.
+                                {% else %}
+                                    Aucune tâche ne vous est assignée.
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

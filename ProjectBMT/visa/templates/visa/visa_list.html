@@ -1,0 +1,143 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Visas - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Gestion des visas</h2>
+
+        <p class="text-muted mb-0">
+            Suivi des demandes de visa
+        </p>
+    </div>
+
+    <a href="{% url 'visa_create' %}" class="btn btn-primary">
+        Ajouter une demande
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Dossier</th>
+                        <th>Client</th>
+                        <th>Pays</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                        <th>Responsable</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for visa in visas %}
+
+                    <tr>
+
+                        <td>
+                            {{ visa.dossier.numero_dossier }}
+                        </td>
+
+                        <td>
+                            {{ visa.dossier.client.nom }}
+                            {{ visa.dossier.client.prenom }}
+                        </td>
+
+                        <td>
+                            {{ visa.pays_destination }}
+                        </td>
+
+                        <td>
+                            {{ visa.type_visa|default:"-" }}
+                        </td>
+
+                        <td>
+
+                            {% if visa.statut == "ACCEPTE" %}
+
+                                <span class="badge bg-success">
+                                    {{ visa.get_statut_display }}
+                                </span>
+
+                            {% elif visa.statut == "REFUSE" %}
+
+                                <span class="badge bg-danger">
+                                    {{ visa.get_statut_display }}
+                                </span>
+
+                            {% elif visa.statut == "EN_TRAITEMENT" %}
+
+                                <span class="badge bg-primary">
+                                    {{ visa.get_statut_display }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ visa.get_statut_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ visa.responsable|default:"-" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'visa_detail' visa.id %}"
+                                class="btn btn-sm btn-info"
+                            >
+                                Voir
+                            </a>
+
+                            <a
+                                href="{% url 'visa_update' visa.id %}"
+                                class="btn btn-sm btn-warning"
+                            >
+                                Modifier
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            Aucune demande de visa.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

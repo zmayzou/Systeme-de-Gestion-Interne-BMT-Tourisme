@@ -1,0 +1,350 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Billet - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+    {% if billet %}
+        Modifier le billet
+    {% else %}
+        Ajouter un billet
+    {% endif %}
+
+</h2>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Dossier
+                    </label>
+
+                    <select
+                        name="dossier"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Choisir un dossier
+                        </option>
+
+                        {% for dossier in dossiers %}
+
+                            <option
+                                value="{{ dossier.id }}"
+                                {% if billet.dossier_id == dossier.id %}selected{% endif %}
+                            >
+                                {{ dossier.numero_dossier }}
+                                -
+                                {{ dossier.client.nom }}
+                                {{ dossier.client.prenom }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Responsable
+                    </label>
+
+                    <select
+                        name="responsable"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            Non assigné
+                        </option>
+
+                        {% for emp in responsables %}
+
+                            <option
+                                value="{{ emp.id }}"
+                                {% if billet.responsable_id == emp.id %}selected{% endif %}
+                            >
+                                {{ emp }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Type de billet
+                    </label>
+
+                    <select
+                        name="type_billet"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="AVION"
+                            {% if not billet or billet.type_billet == "AVION" %}selected{% endif %}
+                        >
+                            Avion
+                        </option>
+
+                        <option
+                            value="TRAIN"
+                            {% if billet.type_billet == "TRAIN" %}selected{% endif %}
+                        >
+                            Train
+                        </option>
+
+                        <option
+                            value="BUS"
+                            {% if billet.type_billet == "BUS" %}selected{% endif %}
+                        >
+                            Bus
+                        </option>
+
+                        <option
+                            value="AUTRE"
+                            {% if billet.type_billet == "AUTRE" %}selected{% endif %}
+                        >
+                            Autre
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Compagnie
+                    </label>
+
+                    <input
+                        type="text"
+                        name="compagnie"
+                        class="form-control"
+                        value="{{ billet.compagnie|default:'' }}"
+                        placeholder="Royal Air Maroc, Air France..."
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Ville de départ
+                    </label>
+
+                    <input
+                        type="text"
+                        name="ville_depart"
+                        class="form-control"
+                        value="{{ billet.ville_depart|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Ville d'arrivée
+                    </label>
+
+                    <input
+                        type="text"
+                        name="ville_arrivee"
+                        class="form-control"
+                        value="{{ billet.ville_arrivee|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Date de départ
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="date_depart"
+                        class="form-control"
+                        value="{% if billet.date_depart %}{{ billet.date_depart|date:'Y-m-d\\TH:i' }}{% endif %}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Date de retour
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="date_retour"
+                        class="form-control"
+                        value="{% if billet.date_retour %}{{ billet.date_retour|date:'Y-m-d\\TH:i' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Prix
+                    </label>
+
+                    <div class="input-group">
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            name="prix"
+                            class="form-control"
+                            value="{{ billet.prix|default:'' }}"
+                        >
+
+                        <span class="input-group-text">
+                            MAD
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Référence réservation
+                    </label>
+
+                    <input
+                        type="text"
+                        name="reference_reservation"
+                        class="form-control"
+                        value="{{ billet.reference_reservation|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Statut
+                    </label>
+
+                    <select
+                        name="statut"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="EN_ATTENTE"
+                            {% if not billet or billet.statut == "EN_ATTENTE" %}selected{% endif %}
+                        >
+                            En attente
+                        </option>
+
+                        <option
+                            value="RESERVE"
+                            {% if billet.statut == "RESERVE" %}selected{% endif %}
+                        >
+                            Réservé
+                        </option>
+
+                        <option
+                            value="BILLET_EMIS"
+                            {% if billet.statut == "BILLET_EMIS" %}selected{% endif %}
+                        >
+                            Billet émis
+                        </option>
+
+                        <option
+                            value="ANNULE"
+                            {% if billet.statut == "ANNULE" %}selected{% endif %}
+                        >
+                            Annulé
+                        </option>
+
+                        <option
+                            value="MODIFIE"
+                            {% if billet.statut == "MODIFIE" %}selected{% endif %}
+                        >
+                            Modifié
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-12 mb-3">
+
+                    <label class="form-label">
+                        Commentaire
+                    </label>
+
+                    <textarea
+                        name="commentaire"
+                        class="form-control"
+                        rows="4"
+                    >{{ billet.commentaire|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit" class="btn btn-success">
+                Enregistrer
+            </button>
+
+            <a href="{% url 'billet_list' %}" class="btn btn-secondary">
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

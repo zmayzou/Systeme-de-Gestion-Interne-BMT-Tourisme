@@ -1,0 +1,49 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Supprimer document - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <h3 class="text-danger mb-3">
+            Supprimer le document
+        </h3>
+
+        <p>
+            Êtes-vous sûr de vouloir supprimer
+            <strong>{{ document.nom }}</strong> ?
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <button
+                type="submit"
+                class="btn btn-danger"
+            >
+                Oui, supprimer
+            </button>
+
+
+            <a
+                href="{% url 'dossier_detail' document.dossier.id %}"
+                class="btn btn-secondary"
+            >
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

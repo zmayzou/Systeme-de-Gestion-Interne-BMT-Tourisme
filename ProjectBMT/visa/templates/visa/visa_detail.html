@@ -1,0 +1,144 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Visa - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Demande de visa</h2>
+
+        <p class="text-muted mb-0">
+            Dossier {{ visa.dossier.numero_dossier }}
+        </p>
+    </div>
+
+    <div>
+
+        <a
+            href="{% url 'visa_update' visa.id %}"
+            class="btn btn-warning"
+        >
+            Modifier
+        </a>
+
+        <a
+            href="{% url 'visa_list' %}"
+            class="btn btn-secondary"
+        >
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Client :</strong><br>
+
+                {{ visa.dossier.client.nom }}
+                {{ visa.dossier.client.prenom }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Dossier :</strong><br>
+
+                <a href="{% url 'dossier_detail' visa.dossier.id %}">
+                    {{ visa.dossier.numero_dossier }}
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Pays :</strong><br>
+                {{ visa.pays_destination }}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Type de visa :</strong><br>
+                {{ visa.type_visa|default:"-" }}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Statut :</strong><br>
+                {{ visa.get_statut_display }}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Responsable :</strong><br>
+                {{ visa.responsable|default:"-" }}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Numéro de demande :</strong><br>
+                {{ visa.numero_demande|default:"-" }}
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Rendez-vous :</strong><br>
+
+                {% if visa.date_rendez_vous %}
+                    {{ visa.date_rendez_vous|date:"d/m/Y" }}
+                {% else %}
+                    -
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Date dépôt :</strong><br>
+
+                {% if visa.date_depot %}
+                    {{ visa.date_depot|date:"d/m/Y" }}
+                {% else %}
+                    -
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <strong>Date résultat :</strong><br>
+
+                {% if visa.date_resultat %}
+                    {{ visa.date_resultat|date:"d/m/Y" }}
+                {% else %}
+                    -
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-12">
+                <strong>Commentaire :</strong><br>
+                {{ visa.commentaire|default:"Aucun commentaire." }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

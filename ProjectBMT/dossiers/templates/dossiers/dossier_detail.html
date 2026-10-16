@@ -1,0 +1,1440 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Dossier {{ dossier.numero_dossier }} - BMT Tourisme
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+
+.dossier-workspace {
+    max-width: 1700px;
+    margin: 0 auto;
+}
+
+/* HERO */
+
+.dossier-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 25px 27px;
+    margin-bottom: 18px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(83,104,199,.48), transparent 27%),
+        linear-gradient(125deg, #101b4f, #17276c 55%, #263d99);
+    color: white;
+    box-shadow: 0 18px 45px rgba(16,27,79,.15);
+}
+
+.dossier-hero::after {
+    content: "";
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    right: -70px;
+    top: -140px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.hero-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hero-icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 17px;
+    background: rgba(255,255,255,.09);
+    font-size: 22px;
+}
+
+.hero-eyebrow {
+    margin-bottom: 4px;
+    color: rgba(255,255,255,.55);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
+
+.hero-client {
+    margin-top: 5px;
+    color: rgba(255,255,255,.66);
+    font-size: 10px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.hero-btn {
+    min-height: 39px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 13px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 10px;
+    background: rgba(255,255,255,.09);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    transition: .2s ease;
+}
+
+.hero-btn:hover {
+    background: white;
+    color: var(--bmt-navy);
+}
+
+.hero-btn.primary {
+    border-color: white;
+    background: white;
+    color: var(--bmt-navy);
+}
+
+/* STATUS STRIP */
+
+.status-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+.status-item {
+    min-height: 39px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 12px;
+    border: 1px solid var(--bmt-border);
+    border-radius: 11px;
+    background: white;
+    color: #60697e;
+    font-size: 9px;
+    box-shadow: 0 5px 16px rgba(25,39,87,.035);
+}
+
+.status-item i {
+    color: var(--bmt-blue);
+}
+
+.status-item strong {
+    color: var(--bmt-text);
+}
+
+/* KPI FINANCE */
+
+.finance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.finance-card {
+    position: relative;
+    overflow: hidden;
+    padding: 17px;
+    border: 1px solid var(--bmt-border);
+    border-radius: 17px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(25,39,87,.04);
+}
+
+.finance-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.finance-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.finance-blue .finance-icon {
+    background: #eef1ff;
+    color: var(--bmt-blue);
+}
+
+.finance-green .finance-icon {
+    background: #eaf8f3;
+    color: #138a65;
+}
+
+.finance-orange .finance-icon {
+    background: #fff6e8;
+    color: #d18221;
+}
+
+.finance-red .finance-icon {
+    background: #fff0f1;
+    color: var(--bmt-red);
+}
+
+.finance-label {
+    margin-top: 13px;
+    color: var(--bmt-muted);
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.finance-value {
+    margin-top: 3px;
+    color: #182139;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.finance-value small {
+    font-size: 8px;
+    color: #8991a4;
+    font-weight: 700;
+}
+
+/* PROCESS ALERT */
+
+.process-alert {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 18px;
+    padding: 13px 15px;
+    border-radius: 13px;
+}
+
+.process-alert.allowed {
+    border: 1px solid #cce9dc;
+    background: #f0faf6;
+}
+
+.process-alert.blocked {
+    border: 1px solid #f1cdd0;
+    background: #fff4f5;
+}
+
+.process-alert-icon {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.allowed .process-alert-icon {
+    background: #dcefe7;
+    color: #138a65;
+}
+
+.blocked .process-alert-icon {
+    background: #f8dcdf;
+    color: var(--bmt-red);
+}
+
+.process-alert-title {
+    color: var(--bmt-text);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.process-alert-text {
+    margin-top: 2px;
+    color: #747d90;
+    font-size: 8px;
+}
+
+/* LAYOUT */
+
+.workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 17px;
+    align-items: start;
+}
+
+/* PANEL */
+
+.workspace-panel {
+    overflow: hidden;
+    margin-bottom: 17px;
+    border: 1px solid var(--bmt-border);
+    border-radius: 19px;
+    background: white;
+    box-shadow: 0 9px 28px rgba(25,39,87,.045);
+}
+
+.panel-header {
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--bmt-border);
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panel-icon {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #eef1ff;
+    color: var(--bmt-blue);
+    font-size: 14px;
+}
+
+.panel-title {
+    margin: 0;
+    color: var(--bmt-text);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.panel-subtitle {
+    margin-top: 2px;
+    color: var(--bmt-muted);
+    font-size: 8px;
+}
+
+.panel-action {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border-radius: 9px;
+    background: #eef1ff;
+    color: var(--bmt-blue);
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.panel-action:hover {
+    background: var(--bmt-blue);
+    color: white;
+}
+
+/* TABLE */
+
+.table-main {
+    color: #3e475d;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.table-sub {
+    margin-top: 2px;
+    color: var(--bmt-muted);
+    font-size: 8px;
+    font-weight: 500;
+}
+
+.table-money {
+    color: #182139;
+    font-weight: 800;
+}
+
+.small-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.badge-green {
+    background: #eaf8f3;
+    color: #138a65;
+}
+
+.badge-red {
+    background: #fff0f1;
+    color: #d9252b;
+}
+
+.badge-orange {
+    background: #fff6e8;
+    color: #c7791c;
+}
+
+.badge-blue {
+    background: #eef1ff;
+    color: #3048a5;
+}
+
+.badge-gray {
+    background: #f2f4f8;
+    color: #697287;
+}
+
+.row-action {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #f2f4f8;
+    color: var(--bmt-blue);
+}
+
+.row-action:hover {
+    background: var(--bmt-blue);
+    color: white;
+}
+
+/* EMPTY */
+
+.empty-state {
+    padding: 35px 20px;
+    text-align: center;
+}
+
+.empty-state i {
+    display: block;
+    margin-bottom: 7px;
+    color: #a3aaba;
+    font-size: 21px;
+}
+
+.empty-state div {
+    color: var(--bmt-muted);
+    font-size: 9px;
+}
+
+/* SIDEBAR */
+
+.sidebar-panel {
+    overflow: hidden;
+    margin-bottom: 17px;
+    border: 1px solid var(--bmt-border);
+    border-radius: 19px;
+    background: white;
+    box-shadow: 0 9px 28px rgba(25,39,87,.045);
+}
+
+.sidebar-panel-body {
+    padding: 17px;
+}
+
+.info-row {
+    display: flex;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid #f0f2f7;
+}
+
+.info-row:last-child {
+    border-bottom: 0;
+}
+
+.info-icon {
+    width: 31px;
+    height: 31px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #f2f4f8;
+    color: #717b91;
+    font-size: 11px;
+}
+
+.info-label {
+    color: #9aa1b1;
+    font-size: 7px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.info-value {
+    margin-top: 2px;
+    color: #40495f;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.description-box {
+    margin-top: 13px;
+    padding: 12px;
+    border-radius: 11px;
+    background: #f7f8fb;
+    color: #626b80;
+    font-size: 9px;
+    line-height: 1.65;
+}
+
+/* PAYMENT STATUS */
+
+.payment-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
+    padding: 11px;
+    border-radius: 11px;
+    background: #f7f8fb;
+}
+
+.payment-state:last-child {
+    margin-bottom: 0;
+}
+
+.payment-state-icon {
+    width: 31px;
+    height: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: white;
+    color: var(--bmt-blue);
+}
+
+.payment-state-label {
+    color: #969dae;
+    font-size: 7px;
+}
+
+.payment-state-value {
+    margin-top: 2px;
+    color: #424b61;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+    .workspace-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 850px) {
+    .finance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-content {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 575px) {
+    .finance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-left {
+        align-items: flex-start;
+    }
+
+    .hero-actions {
+        width: 100%;
+    }
+
+    .hero-btn {
+        flex: 1;
+    }
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dossier-workspace">
+
+    <!-- HERO -->
+
+    <section class="dossier-hero">
+
+        <div class="hero-content">
+
+            <div class="hero-left">
+
+                <div class="hero-icon">
+
+                    {% if dossier.type_service == 'VISA' %}
+                        <i class="bi bi-passport"></i>
+                    {% elif dossier.type_service == 'BILLETTERIE' %}
+                        <i class="bi bi-ticket-perforated"></i>
+                    {% elif dossier.type_service == 'VOYAGE' %}
+                        <i class="bi bi-airplane"></i>
+                    {% elif dossier.type_service == 'HOTEL' %}
+                        <i class="bi bi-building"></i>
+                    {% else %}
+                        <i class="bi bi-folder"></i>
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <div class="hero-eyebrow">
+                        Dossier client • {{ dossier.get_type_service_display }}
+                    </div>
+
+                    <h1 class="hero-title">
+                        {{ dossier.numero_dossier }}
+                    </h1>
+
+                    <div class="hero-client">
+                        <i class="bi bi-person me-1"></i>
+                        {{ dossier.client }}
+                        &nbsp; • &nbsp;
+                        {{ dossier.get_statut_display }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-actions">
+
+                <a
+                    href="{% url 'dossier_list' %}"
+                    class="hero-btn"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Retour
+                </a>
+
+                <a
+                    href="{% url 'dossier_update' dossier.id %}"
+                    class="hero-btn primary"
+                >
+                    <i class="bi bi-pencil"></i>
+                    Modifier
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK STATUS -->
+
+    <div class="status-strip">
+
+        <div class="status-item">
+            <i class="bi bi-briefcase"></i>
+            Service :
+            <strong>{{ dossier.get_type_service_display }}</strong>
+        </div>
+
+        <div class="status-item">
+            <i class="bi bi-activity"></i>
+            Statut :
+            <strong>{{ dossier.get_statut_display }}</strong>
+        </div>
+
+        <div class="status-item">
+            <i class="bi bi-buildings"></i>
+            Agence :
+            <strong>{{ dossier.agence }}</strong>
+        </div>
+
+        <div class="status-item">
+            <i class="bi bi-calendar3"></i>
+            Créé le :
+            <strong>{{ dossier.date_creation|date:"d/m/Y" }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- FINANCE -->
+
+    <div class="finance-grid">
+
+        <div class="finance-card finance-blue">
+
+            <div class="finance-top">
+                <div class="finance-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+            </div>
+
+            <div class="finance-label">
+                Montant total
+            </div>
+
+            <div class="finance-value">
+                {{ dossier.montant_total|floatformat:2 }}
+                <small>MAD</small>
+            </div>
+
+        </div>
+
+
+        <div class="finance-card finance-green">
+
+            <div class="finance-top">
+                <div class="finance-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+
+            <div class="finance-label">
+                Montant payé
+            </div>
+
+            <div class="finance-value">
+                {{ dossier.montant_paye|floatformat:2 }}
+                <small>MAD</small>
+            </div>
+
+        </div>
+
+
+        <div class="finance-card finance-orange">
+
+            <div class="finance-top">
+                <div class="finance-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+            </div>
+
+            <div class="finance-label">
+                Avances versées
+            </div>
+
+            <div class="finance-value">
+                {{ dossier.total_avances|floatformat:2 }}
+                <small>MAD</small>
+            </div>
+
+        </div>
+
+
+        <div class="finance-card finance-red">
+
+            <div class="finance-top">
+                <div class="finance-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+            </div>
+
+            <div class="finance-label">
+                Reste à payer
+            </div>
+
+            <div class="finance-value">
+                {{ dossier.reste_a_payer|floatformat:2 }}
+                <small>MAD</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROCESS RULE -->
+
+    {% if dossier.peut_etre_traite %}
+
+        <div class="process-alert allowed">
+
+            <div class="process-alert-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div>
+                <div class="process-alert-title">
+                    Dossier autorisé au traitement
+                </div>
+
+                <div class="process-alert-text">
+                    Les conditions financières permettent de poursuivre
+                    le traitement de ce dossier.
+                </div>
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="process-alert blocked">
+
+            <div class="process-alert-icon">
+                <i class="bi bi-lock"></i>
+            </div>
+
+            <div>
+                <div class="process-alert-title">
+                    Traitement bloqué
+                </div>
+
+                <div class="process-alert-text">
+                    Une avance doit être enregistrée avant le passage
+                    du dossier en traitement.
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="workspace-grid">
+
+        <!-- MAIN -->
+
+        <main>
+
+            <!-- PAYMENTS -->
+
+            <div class="workspace-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="panel-title">
+                                Paiements
+                            </h2>
+
+                            <div class="panel-subtitle">
+                                Historique financier du dossier
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{% url 'paiement_create' %}"
+                        class="panel-action"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Ajouter
+                    </a>
+
+                </div>
+
+
+                {% if dossier.paiements.all %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Montant</th>
+                                <th>Mode</th>
+                                <th>Référence</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for paiement in dossier.paiements.all %}
+
+                            <tr>
+
+                                <td>
+                                    {% if paiement.type_paiement == 'REMBOURSEMENT' %}
+                                        <span class="small-badge badge-red">
+                                            <i class="bi bi-arrow-return-left"></i>
+                                            {{ paiement.get_type_paiement_display }}
+                                        </span>
+                                    {% elif paiement.type_paiement == 'AVANCE' %}
+                                        <span class="small-badge badge-blue">
+                                            {{ paiement.get_type_paiement_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="small-badge badge-green">
+                                            {{ paiement.get_type_paiement_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="table-money">
+                                        {{ paiement.montant|floatformat:2 }} MAD
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="table-main">
+                                        {{ paiement.get_mode_paiement_display }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="table-sub">
+                                        {{ paiement.reference|default:"—" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="table-main">
+                                        {{ paiement.date_paiement|date:"d/m/Y" }}
+                                    </span>
+
+                                    <div class="table-sub">
+                                        {{ paiement.date_paiement|date:"H:i" }}
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <i class="bi bi-wallet2"></i>
+                        <div>Aucun paiement enregistré.</div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- DOCUMENTS -->
+
+            <div class="workspace-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="panel-title">
+                                Documents
+                            </h2>
+
+                            <div class="panel-subtitle">
+                                Pièces et documents associés
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{% url 'document_create' dossier.id %}"
+                        class="panel-action"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Ajouter
+                    </a>
+
+                </div>
+
+
+                {% if dossier.documents.all %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Statut</th>
+                                <th>Ajouté le</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for document in dossier.documents.all %}
+
+                            <tr>
+
+                                <td>
+                                    <div class="table-main">
+                                        <i class="bi bi-file-earmark-text me-2 text-muted"></i>
+                                        {{ document.nom }}
+                                    </div>
+                                </td>
+
+                                <td>
+
+                                    {% if document.statut == 'VALIDE' %}
+                                        <span class="small-badge badge-green">
+                                            Validé
+                                        </span>
+
+                                    {% elif document.statut == 'MANQUANT' %}
+                                        <span class="small-badge badge-orange">
+                                            Manquant
+                                        </span>
+
+                                    {% elif document.statut == 'REFUSE' %}
+                                        <span class="small-badge badge-red">
+                                            Refusé
+                                        </span>
+
+                                    {% else %}
+                                        <span class="small-badge badge-blue">
+                                            Reçu
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    <span class="table-main">
+                                        {{ document.date_ajout|date:"d/m/Y" }}
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+
+                                    <a
+                                        href="{% url 'document_update' document.id %}"
+                                        class="row-action"
+                                        title="Modifier"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <div>Aucun document associé.</div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- TASKS -->
+
+            <div class="workspace-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">
+                            <i class="bi bi-check2-square"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="panel-title">
+                                Tâches associées
+                            </h2>
+
+                            <div class="panel-subtitle">
+                                Travail lié à ce dossier
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% if dossier.taches.all %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Tâche</th>
+                                <th>Responsable</th>
+                                <th>Statut</th>
+                                <th>Priorité</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for tache in dossier.taches.all %}
+
+                            <tr>
+
+                                <td>
+                                    <a
+                                        href="{% url 'task_detail' tache.id %}"
+                                        class="table-main"
+                                    >
+                                        {{ tache.titre }}
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <span class="table-main">
+                                        {{ tache.responsable|default:"Non assignée" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {% if tache.statut == 'TERMINEE' %}
+                                        <span class="small-badge badge-green">
+                                            {{ tache.get_statut_display }}
+                                        </span>
+                                    {% elif tache.statut == 'EN_COURS' %}
+                                        <span class="small-badge badge-blue">
+                                            {{ tache.get_statut_display }}
+                                        </span>
+                                    {% elif tache.statut == 'EN_ATTENTE' %}
+                                        <span class="small-badge badge-orange">
+                                            {{ tache.get_statut_display }}
+                                        </span>
+                                    {% elif tache.statut == 'ANNULEE' %}
+                                        <span class="small-badge badge-red">
+                                            {{ tache.get_statut_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="small-badge badge-gray">
+                                            {{ tache.get_statut_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if tache.priorite == 'URGENTE' %}
+                                        <span class="small-badge badge-red">
+                                            {{ tache.get_priorite_display }}
+                                        </span>
+                                    {% elif tache.priorite == 'HAUTE' %}
+                                        <span class="small-badge badge-orange">
+                                            {{ tache.get_priorite_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="small-badge badge-gray">
+                                            {{ tache.get_priorite_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-end">
+
+                                    <a
+                                        href="{% url 'task_detail' tache.id %}"
+                                        class="row-action"
+                                    >
+                                        <i class="bi bi-arrow-up-right"></i>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <i class="bi bi-check2-square"></i>
+                        <div>Aucune tâche associée à ce dossier.</div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </main>
+
+
+        <!-- RIGHT SIDEBAR -->
+
+        <aside>
+
+            <!-- INFORMATION -->
+
+            <div class="sidebar-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="panel-title">
+                                Informations
+                            </h2>
+
+                            <div class="panel-subtitle">
+                                Fiche du dossier
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sidebar-panel-body">
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-label">Client</div>
+                            <div class="info-value">
+                                {{ dossier.client }}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            <i class="bi bi-buildings"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-label">Agence</div>
+                            <div class="info-value">
+                                {{ dossier.agence }}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-label">Créé par</div>
+                            <div class="info-value">
+                                {{ dossier.cree_par|default:"—" }}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+
+                        <div>
+                            <div class="info-label">Date de création</div>
+                            <div class="info-value">
+                                {{ dossier.date_creation|date:"d/m/Y à H:i" }}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    {% if dossier.description %}
+
+                        <div class="description-box">
+                            <strong>Description</strong>
+                            <br><br>
+                            {{ dossier.description|linebreaksbr }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- FINANCIAL STATUS -->
+
+            <div class="sidebar-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="panel-title">
+                                État financier
+                            </h2>
+
+                            <div class="panel-subtitle">
+                                Paiement & avance
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sidebar-panel-body">
+
+                    <div class="payment-state">
+
+                        <div class="payment-state-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+
+                        <div>
+                            <div class="payment-state-label">
+                                Paiement
+                            </div>
+
+                            <div class="payment-state-value">
+
+                                {% if dossier.est_solde %}
+                                    Dossier soldé
+                                {% else %}
+                                    Paiement incomplet
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="payment-state">
+
+                        <div class="payment-state-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+
+                        <div>
+                            <div class="payment-state-label">
+                                Avance
+                            </div>
+
+                            <div class="payment-state-value">
+
+                                {% if dossier.avance_requise %}
+
+                                    {% if dossier.avance_versee %}
+                                        Avance versée
+                                    {% else %}
+                                        Avance non versée
+                                    {% endif %}
+
+                                {% else %}
+                                    Non requise
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

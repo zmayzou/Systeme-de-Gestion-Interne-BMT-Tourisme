@@ -1,0 +1,4383 @@
+{% load static %}
+
+{% load permission_tags %}
+
+
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+
+
+<head>
+
+
+
+    <meta charset="UTF-8">
+
+
+
+    <meta name="viewport"
+
+          content="width=device-width, initial-scale=1.0">
+
+
+
+    <title>
+
+        {% block title %}
+
+            BMT Tourisme
+
+        {% endblock %}
+
+    </title>
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- GOOGLE FONT -->
+
+    <!-- ================================================= -->
+
+
+
+    <link rel="preconnect"
+
+          href="https://fonts.googleapis.com">
+
+
+
+    <link rel="preconnect"
+
+          href="https://fonts.gstatic.com"
+
+          crossorigin>
+
+
+
+    <link
+
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+
+        rel="stylesheet"
+
+    >
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- BOOTSTRAP -->
+
+    <!-- ================================================= -->
+
+
+
+    <link
+
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+
+        rel="stylesheet"
+
+    >
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- BOOTSTRAP ICONS -->
+
+    <!-- ================================================= -->
+
+
+
+    <link
+
+        rel="stylesheet"
+
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+
+    >
+
+
+
+
+
+    <style>
+
+
+
+        /* =================================================
+
+           VARIABLES
+
+        ================================================= */
+
+
+
+        :root {
+
+
+
+            --bmt-navy: #101b4f;
+
+
+
+            --bmt-navy-dark: #08102f;
+
+
+
+            --bmt-blue: #263d99;
+
+
+
+            --bmt-blue-light: #5368c7;
+
+
+
+            --bmt-red: #e52329;
+
+
+
+            --bmt-red-dark: #c81920;
+
+
+
+            --bmt-bg: #f5f7fc;
+
+
+
+            --bmt-card: #ffffff;
+
+
+
+            --bmt-text: #172033;
+
+
+
+            --bmt-muted: #7b849c;
+
+
+
+            --bmt-border: #e7eaf2;
+
+
+
+            --sidebar-width: 276px;
+
+
+
+            --topbar-height: 78px;
+
+
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           GLOBAL
+
+        ================================================= */
+
+
+
+        \* {
+
+            box-sizing: border-box;
+
+        }
+
+
+
+
+
+        html,
+
+        body {
+
+            margin: 0;
+
+            min-height: 100%;
+
+        }
+
+
+
+
+
+        body {
+
+
+
+            font-family: 'Inter', sans-serif;
+
+
+
+            background:
+
+                radial-gradient(
+
+                    circle at 100% 0%,
+
+                    rgba(38, 61, 153, 0.07),
+
+                    transparent 25%
+
+                ),
+
+                var(--bmt-bg);
+
+
+
+            color: var(--bmt-text);
+
+
+
+            overflow-x: hidden;
+
+        }
+
+
+
+
+
+        a {
+
+            text-decoration: none;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           SIDEBAR
+
+        ================================================= */
+
+
+
+        .bmt-sidebar {
+
+
+
+            position: fixed;
+
+
+
+            top: 0;
+
+
+
+            left: 0;
+
+
+
+            width: var(--sidebar-width);
+
+
+
+            height: 100vh;
+
+
+
+            z-index: 1050;
+
+
+
+            display: flex;
+
+
+
+            flex-direction: column;
+
+
+
+            background:
+
+                radial-gradient(
+
+                    circle at 0% 0%,
+
+                    rgba(83, 104, 199, 0.35),
+
+                    transparent 35%
+
+                ),
+
+                linear-gradient(
+
+                    180deg,
+
+                    #121d55 0%,
+
+                    #0b143d 55%,
+
+                    #080f2d 100%
+
+                );
+
+
+
+            color: white;
+
+
+
+            box-shadow:
+
+                18px 0 45px rgba(15, 27, 79, 0.12);
+
+
+
+            transition:
+
+                transform 0.3s ease,
+
+                width 0.3s ease;
+
+        }
+        /* =================================================
+           LOGO AREA
+        ================================================= */
+
+        .sidebar-brand {
+            min-height: 112px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .brand-logo-box {
+            width: 74px;
+            height: 74px;
+            flex: 0 0 74px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .brand-logo-box img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            background: transparent;
+            border: 0;
+        }
+
+        .brand-content {
+            flex: 1;
+            min-width: 0;
+            margin-left: 0;
+            overflow: hidden;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            margin-top: 5px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1.25px;
+            color: rgba(255,255,255,0.58);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+
+
+
+
+
+
+        /* =================================================
+
+           SIDEBAR SCROLL
+
+        ================================================= */
+
+
+
+        .sidebar-scroll {
+
+
+
+            flex: 1;
+
+
+
+            overflow-y: auto;
+
+
+
+            padding: 18px 14px;
+
+        }
+
+
+
+
+
+        .sidebar-scroll::-webkit-scrollbar {
+
+            width: 4px;
+
+        }
+
+
+
+
+
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+
+
+
+            background:
+
+                rgba(255,255,255,0.14);
+
+
+
+            border-radius: 10px;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           MENU SECTION
+
+        ================================================= */
+
+
+
+        .menu-label {
+
+
+
+            padding: 8px 13px;
+
+
+
+            margin-top: 7px;
+
+
+
+            margin-bottom: 5px;
+
+
+
+            font-size: 10px;
+
+
+
+            font-weight: 700;
+
+
+
+            letter-spacing: 1.5px;
+
+
+
+            text-transform: uppercase;
+
+
+
+            color: rgba(255,255,255,0.34);
+
+        }
+
+
+
+
+
+        .bmt-menu {
+
+
+
+            list-style: none;
+
+
+
+            padding: 0;
+
+
+
+            margin: 0;
+
+        }
+
+
+
+
+
+        .bmt-menu-item {
+
+
+
+            margin-bottom: 5px;
+
+        }
+
+
+
+
+
+        .bmt-menu-link {
+
+
+
+            position: relative;
+
+
+
+            min-height: 48px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            padding: 11px 13px;
+
+
+
+            border-radius: 13px;
+
+
+
+            color: rgba(255,255,255,0.69);
+
+
+
+            font-size: 13px;
+
+
+
+            font-weight: 500;
+
+
+
+            transition: all 0.22s ease;
+
+        }
+
+
+
+
+
+        .bmt-menu-link:hover {
+
+
+
+            color: white;
+
+
+
+            background:
+
+                rgba(255,255,255,0.075);
+
+
+
+            transform: translateX(3px);
+
+        }
+
+
+
+
+
+        .bmt-menu-link.active {
+
+
+
+            color: white;
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    rgba(72, 93, 196, 0.95),
+
+                    rgba(38, 61, 153, 0.95)
+
+                );
+
+
+
+            box-shadow:
+
+                0 9px 25px rgba(0,0,0,0.17);
+
+        }
+
+
+
+
+
+        .bmt-menu-link.active::before {
+
+
+
+            content: '';
+
+
+
+            position: absolute;
+
+
+
+            left: -14px;
+
+
+
+            width: 4px;
+
+
+
+            height: 25px;
+
+
+
+            border-radius: 0 8px 8px 0;
+
+
+
+            background: var(--bmt-red);
+
+        }
+
+
+
+
+
+        .menu-icon {
+
+
+
+            width: 34px;
+
+
+
+            height: 34px;
+
+
+
+            flex-shrink: 0;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            margin-right: 8px;
+
+
+
+            border-radius: 10px;
+
+
+
+            font-size: 17px;
+
+
+
+            color: rgba(255,255,255,0.82);
+
+
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+
+
+        .bmt-menu-link.active .menu-icon {
+
+
+
+            background:
+
+                rgba(255,255,255,0.12);
+
+
+
+            color: white;
+
+        }
+
+
+
+
+
+        .menu-text {
+
+
+
+            flex: 1;
+
+
+
+            white-space: nowrap;
+
+        }
+
+
+
+
+
+        .menu-badge {
+
+
+
+            min-width: 22px;
+
+
+
+            height: 22px;
+
+
+
+            padding: 0 6px;
+
+
+
+            display: inline-flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            border-radius: 50px;
+
+
+
+            background: var(--bmt-red);
+
+
+
+            color: white;
+
+
+
+            font-size: 10px;
+
+
+
+            font-weight: 700;
+
+
+
+            box-shadow:
+
+                0 4px 12px rgba(229,35,41,0.35);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           SIDEBAR PROFILE
+
+        ================================================= */
+
+
+
+        .sidebar-footer {
+
+
+
+            padding: 14px;
+
+
+
+            border-top:
+
+                1px solid rgba(255,255,255,0.08);
+
+        }
+
+
+
+
+
+        .sidebar-user {
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            padding: 10px;
+
+
+
+            border-radius: 15px;
+
+
+
+            background:
+
+                rgba(255,255,255,0.055);
+
+
+
+            border:
+
+                1px solid rgba(255,255,255,0.055);
+
+
+
+            margin-bottom: 10px;
+
+        }
+
+
+
+
+
+        .sidebar-avatar {
+
+
+
+            width: 42px;
+
+
+
+            height: 42px;
+
+
+
+            flex-shrink: 0;
+
+
+
+            border-radius: 13px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #4359c3,
+
+                    #273b93
+
+                );
+
+
+
+            color: white;
+
+
+
+            font-size: 16px;
+
+
+
+            font-weight: 700;
+
+
+
+            box-shadow:
+
+                0 7px 18px rgba(0,0,0,0.2);
+
+        }
+
+
+
+
+
+        .sidebar-user-info {
+
+
+
+            margin-left: 10px;
+
+
+
+            min-width: 0;
+
+        }
+
+
+
+
+
+        .sidebar-user-name {
+
+
+
+            color: white;
+
+
+
+            font-size: 12px;
+
+
+
+            font-weight: 700;
+
+
+
+            white-space: nowrap;
+
+
+
+            overflow: hidden;
+
+
+
+            text-overflow: ellipsis;
+
+        }
+
+
+
+
+
+        .sidebar-user-role {
+
+
+
+            margin-top: 2px;
+
+
+
+            font-size: 10px;
+
+
+
+            color: rgba(255,255,255,0.47);
+
+
+
+            white-space: nowrap;
+
+
+
+            overflow: hidden;
+
+
+
+            text-overflow: ellipsis;
+
+        }
+
+
+
+
+
+        .logout-btn {
+
+
+
+            width: 100%;
+
+
+
+            height: 43px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            gap: 8px;
+
+
+
+            border: 0;
+
+
+
+            border-radius: 12px;
+
+
+
+            background:
+
+                rgba(229,35,41,0.11);
+
+
+
+            color: #ff8589;
+
+
+
+            font-size: 12px;
+
+
+
+            font-weight: 600;
+
+
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+
+
+        .logout-btn:hover {
+
+
+
+            background: var(--bmt-red);
+
+
+
+            color: white;
+
+
+
+            transform: translateY(-1px);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           APP
+
+        ================================================= */
+
+
+
+        .bmt-app {
+
+
+
+            min-height: 100vh;
+
+
+
+            margin-left: var(--sidebar-width);
+
+
+
+            transition: margin 0.3s ease;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           TOPBAR
+
+        ================================================= */
+
+
+
+        .bmt-topbar {
+
+
+
+            height: var(--topbar-height);
+
+
+
+            position: sticky;
+
+
+
+            top: 0;
+
+
+
+            z-index: 1000;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: space-between;
+
+
+
+            padding: 0 30px;
+
+
+
+            background:
+
+                rgba(255,255,255,0.88);
+
+
+
+            backdrop-filter: blur(18px);
+
+
+
+            -webkit-backdrop-filter: blur(18px);
+
+
+
+            border-bottom:
+
+                1px solid rgba(224,228,239,0.85);
+
+        }
+
+
+
+
+
+        .topbar-left {
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            gap: 15px;
+
+        }
+
+
+
+
+
+        .mobile-menu-btn {
+
+
+
+            width: 42px;
+
+
+
+            height: 42px;
+
+
+
+            border: 1px solid var(--bmt-border);
+
+
+
+            border-radius: 12px;
+
+
+
+            background: white;
+
+
+
+            color: var(--bmt-navy);
+
+
+
+            display: none;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            font-size: 20px;
+
+        }
+
+
+
+
+
+        .topbar-heading {
+
+
+
+            font-size: 14px;
+
+
+
+            font-weight: 700;
+
+
+
+            color: var(--bmt-navy);
+
+        }
+
+
+
+
+
+        .topbar-subheading {
+
+
+
+            margin-top: 2px;
+
+
+
+            font-size: 11px;
+
+
+
+            color: var(--bmt-muted);
+
+        }
+
+
+
+
+
+        .topbar-right {
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            gap: 10px;
+
+        }
+
+
+
+
+
+        .topbar-action {
+
+
+
+            position: relative;
+
+
+
+            width: 43px;
+
+
+
+            height: 43px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            border-radius: 13px;
+
+
+
+            border: 1px solid var(--bmt-border);
+
+
+
+            background: white;
+
+
+
+            color: var(--bmt-navy);
+
+
+
+            font-size: 17px;
+
+
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+
+
+        .topbar-action:hover {
+
+
+
+            color: white;
+
+
+
+            background: var(--bmt-blue);
+
+
+
+            border-color: var(--bmt-blue);
+
+
+
+            transform: translateY(-2px);
+
+
+
+            box-shadow:
+
+                0 7px 18px rgba(38,61,153,0.18);
+
+        }
+
+
+
+
+
+        .notification-dot {
+
+
+
+            position: absolute;
+
+
+
+            top: -4px;
+
+
+
+            right: -4px;
+
+
+
+            min-width: 19px;
+
+
+
+            height: 19px;
+
+
+
+            padding: 0 5px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            border-radius: 20px;
+
+
+
+            background: var(--bmt-red);
+
+
+
+            border: 2px solid white;
+
+
+
+            color: white;
+
+
+
+            font-size: 8px;
+
+
+
+            font-weight: 800;
+
+        }
+
+
+
+
+
+        .topbar-profile {
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            gap: 9px;
+
+
+
+            padding: 5px 10px 5px 5px;
+
+
+
+            border: 1px solid var(--bmt-border);
+
+
+
+            border-radius: 14px;
+
+
+
+            background: white;
+
+        }
+
+
+
+
+
+        .topbar-avatar {
+
+
+
+            width: 35px;
+
+
+
+            height: 35px;
+
+
+
+            display: flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            border-radius: 11px;
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    var(--bmt-blue-light),
+
+                    var(--bmt-navy)
+
+                );
+
+
+
+            color: white;
+
+
+
+            font-size: 12px;
+
+
+
+            font-weight: 700;
+
+        }
+
+
+
+
+
+        .topbar-profile-name {
+
+
+
+            max-width: 150px;
+
+
+
+            font-size: 11px;
+
+
+
+            font-weight: 700;
+
+
+
+            color: var(--bmt-text);
+
+
+
+            white-space: nowrap;
+
+
+
+            overflow: hidden;
+
+
+
+            text-overflow: ellipsis;
+
+        }
+
+
+
+
+
+        .topbar-profile-role {
+
+
+
+            margin-top: 1px;
+
+
+
+            font-size: 9px;
+
+
+
+            color: var(--bmt-muted);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           PAGE
+
+        ================================================= */
+
+
+
+        .bmt-content {
+
+
+
+            padding: 28px 30px 45px;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           GLOBAL CARD UPGRADE
+
+        ================================================= */
+
+
+
+        .card {
+
+
+
+            border: 1px solid rgba(226,230,239,0.85);
+
+
+
+            border-radius: 18px;
+
+
+
+            background: var(--bmt-card);
+
+
+
+            box-shadow:
+
+                0 7px 28px rgba(25,39,87,0.055) !important;
+
+
+
+            overflow: hidden;
+
+        }
+
+
+
+
+
+        .card-header {
+
+
+
+            padding: 17px 20px;
+
+
+
+            border-bottom:
+
+                1px solid var(--bmt-border);
+
+
+
+            background: white !important;
+
+        }
+
+
+
+
+
+        .card-body {
+
+
+
+            padding: 20px;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           BUTTONS
+
+        ================================================= */
+
+
+
+        .btn {
+
+
+
+            border-radius: 11px;
+
+
+
+            font-size: 12px;
+
+
+
+            font-weight: 600;
+
+
+
+            padding: 9px 15px;
+
+
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+
+
+        .btn:hover {
+
+
+
+            transform: translateY(-1px);
+
+        }
+
+
+
+
+
+        .btn-primary {
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    var(--bmt-blue),
+
+                    var(--bmt-navy)
+
+                );
+
+
+
+            border-color: var(--bmt-blue);
+
+        }
+
+
+
+
+
+        .btn-success {
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #138a65,
+
+                    #087354
+
+                );
+
+
+
+            border-color: transparent;
+
+        }
+
+
+
+
+
+        .btn-danger {
+
+
+
+            background:
+
+                linear-gradient(
+
+                    135deg,
+
+                    #ed3b40,
+
+                    var(--bmt-red-dark)
+
+                );
+
+
+
+            border-color: transparent;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           FORM CONTROLS
+
+        ================================================= */
+
+
+
+        .form-label {
+
+
+
+            margin-bottom: 7px;
+
+
+
+            font-size: 11px;
+
+
+
+            font-weight: 700;
+
+
+
+            color: #47506a;
+
+        }
+
+
+
+
+
+        .form-control,
+
+        .form-select {
+
+
+
+            min-height: 44px;
+
+
+
+            border:
+
+                1px solid #dde2ed;
+
+
+
+            border-radius: 11px;
+
+
+
+            background-color: #fbfcfe;
+
+
+
+            font-size: 12px;
+
+
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+
+
+        .form-control:focus,
+
+        .form-select:focus {
+
+
+
+            background: white;
+
+
+
+            border-color: var(--bmt-blue-light);
+
+
+
+            box-shadow:
+
+                0 0 0 4px rgba(38,61,153,0.08);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           TABLES
+
+        ================================================= */
+
+
+
+        .table {
+
+
+
+            margin-bottom: 0;
+
+
+
+            font-size: 12px;
+
+        }
+
+
+
+
+
+        .table thead th {
+
+
+
+            padding: 13px 16px;
+
+
+
+            border-bottom:
+
+                1px solid var(--bmt-border);
+
+
+
+            background: #f8f9fd;
+
+
+
+            color: #69728a;
+
+
+
+            font-size: 10px;
+
+
+
+            font-weight: 700;
+
+
+
+            text-transform: uppercase;
+
+
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+
+
+
+        .table tbody td {
+
+
+
+            padding: 14px 16px;
+
+
+
+            border-color: #eff1f6;
+
+
+
+            vertical-align: middle;
+
+        }
+
+
+
+
+
+        .table-hover tbody tr {
+
+
+
+            transition: all 0.15s ease;
+
+        }
+
+
+
+
+
+        .table-hover tbody tr:hover {
+
+
+
+            background: #f8f9fd;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           BADGES
+
+        ================================================= */
+
+
+
+        .badge {
+
+
+
+            padding: 6px 9px;
+
+
+
+            border-radius: 8px;
+
+
+
+            font-size: 9px;
+
+
+
+            font-weight: 700;
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           ALERTS
+
+        ================================================= */
+
+
+
+        .messages-wrapper {
+
+
+
+            padding: 18px 30px 0;
+
+        }
+
+
+
+
+
+        .alert {
+
+
+
+            border: 0;
+
+
+
+            border-radius: 13px;
+
+
+
+            font-size: 12px;
+
+
+
+            box-shadow:
+
+                0 6px 20px rgba(0,0,0,0.05);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           PAGE ANIMATION
+
+        ================================================= */
+
+
+
+        .page-animation {
+
+
+
+            animation:
+
+                pageFade 0.35s ease;
+
+        }
+
+
+
+
+
+        @keyframes pageFade {
+
+
+
+            from {
+
+
+
+                opacity: 0;
+
+
+
+                transform:
+
+                    translateY(7px);
+
+            }
+
+
+
+            to {
+
+
+
+                opacity: 1;
+
+
+
+                transform:
+
+                    translateY(0);
+
+            }
+
+
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           SIDEBAR OVERLAY
+
+        ================================================= */
+
+
+
+        .sidebar-overlay {
+
+
+
+            position: fixed;
+
+
+
+            inset: 0;
+
+
+
+            z-index: 1040;
+
+
+
+            display: none;
+
+
+
+            background:
+
+                rgba(6,12,35,0.55);
+
+
+
+            backdrop-filter: blur(3px);
+
+        }
+
+
+
+
+
+        /* =================================================
+
+           RESPONSIVE
+
+        ================================================= */
+
+
+
+        @media (max-width: 991.98px) {
+
+
+
+            .bmt-sidebar {
+
+
+
+                transform:
+
+                    translateX(-100%);
+
+            }
+
+
+
+
+
+            body.sidebar-open
+
+            .bmt-sidebar {
+
+
+
+                transform:
+
+                    translateX(0);
+
+            }
+
+
+
+
+
+            body.sidebar-open
+
+            .sidebar-overlay {
+
+
+
+                display: block;
+
+            }
+
+
+
+
+
+            .bmt-app {
+
+
+
+                margin-left: 0;
+
+            }
+
+
+
+
+
+            .mobile-menu-btn {
+
+
+
+                display: flex;
+
+            }
+
+
+
+
+
+            .bmt-topbar {
+
+
+
+                padding:
+
+                    0 18px;
+
+            }
+
+
+
+
+
+            .bmt-content {
+
+
+
+                padding:
+
+                    22px 18px 40px;
+
+            }
+
+
+
+
+
+            .messages-wrapper {
+
+
+
+                padding:
+
+                    15px 18px 0;
+
+            }
+
+
+
+        }
+
+
+
+
+
+        @media (max-width: 575.98px) {
+
+
+
+            .topbar-profile-info {
+
+                display: none;
+
+            }
+
+
+
+
+
+            .topbar-heading {
+
+                display: none;
+
+            }
+
+
+
+
+
+            .topbar-subheading {
+
+                display: none;
+
+            }
+
+
+
+
+
+            .bmt-topbar {
+
+
+
+                height: 68px;
+
+            }
+
+
+
+
+
+            .bmt-content {
+
+
+
+                padding:
+
+                    18px 13px 35px;
+
+            }
+
+
+
+        }
+
+
+
+    </style>
+
+
+
+
+
+    {% block extra_css %}
+
+    {% endblock %}
+
+
+
+</head>
+
+
+
+
+
+<body>
+
+
+
+
+
+<!-- ===================================================== -->
+
+<!-- MOBILE OVERLAY -->
+
+<!-- ===================================================== -->
+
+
+
+<div
+
+    class="sidebar-overlay"
+
+    id="sidebarOverlay"
+
+></div>
+
+
+
+
+
+<!-- ===================================================== -->
+
+<!-- SIDEBAR -->
+
+<!-- ===================================================== -->
+
+
+
+<aside
+
+    class="bmt-sidebar"
+
+    id="bmtSidebar"
+
+>
+
+
+
+
+
+    <!-- BRAND -->
+
+
+
+    <div class="sidebar-brand">
+
+
+
+        <div class="brand-logo-box">
+
+
+
+            <img
+
+                src="{% static 'images/bmt-logo.png' %}"
+
+                alt="BMT Tourisme"
+
+            >
+
+
+
+        </div>
+
+
+
+
+
+        <div class="brand-content">
+
+
+
+            <div class="brand-title">
+
+                BMT Tourisme
+
+            </div>
+
+
+
+            <div class="brand-subtitle">
+
+                Management System
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- MENU -->
+
+    <!-- ================================================= -->
+
+
+
+    <div class="sidebar-scroll">
+
+
+
+        <div class="menu-label">
+
+            Navigation
+
+        </div>
+
+
+
+
+
+        <ul class="bmt-menu">
+
+
+
+
+
+            <!-- DASHBOARD -->
+
+
+
+            <li class="bmt-menu-item">
+
+
+
+                <a
+
+                    href="{% url 'dashboard' %}"
+
+                    class="bmt-menu-link
+
+                    {% if request.resolver_match.url_name == 'dashboard' %}
+
+                        active
+
+                    {% endif %}"
+
+                >
+
+
+
+                    <span class="menu-icon">
+
+                        <i class="bi bi-grid-1x2-fill"></i>
+
+                    </span>
+
+
+
+                    <span class="menu-text">
+
+                        Dashboard
+
+                    </span>
+
+
+
+                </a>
+
+
+
+            </li>
+
+
+
+
+
+            {% if employe or request.user.is_superuser %}
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- MANAGEMENT -->
+
+                <!-- ===================================== -->
+
+
+
+                {% if request.user|has_perm_metier:"agencies.view" or request.user|has_perm_metier:"employees.view" %}
+
+
+
+                    <div class="menu-label">
+
+                        Organisation
+
+                    </div>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- AGENCES -->
+
+
+
+                {% if not request.user.is_superuser and request.user|has_perm_metier:"agencies.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'agency_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'agency' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-buildings"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Agences
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- EMPLOYES -->
+
+
+
+                {% if request.user|has_perm_metier:"employees.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'employee_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'employee' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-people"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Employés
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- OPERATIONS -->
+
+                <!-- ===================================== -->
+
+
+
+                {% if request.user|has_perm_metier:"clients.view" or request.user|has_perm_metier:"dossiers.view" %}
+
+
+
+                    <div class="menu-label">
+
+                        Opérations
+
+                    </div>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- CLIENTS -->
+
+
+
+                {% if request.user|has_perm_metier:"clients.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'client_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'client' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-person-vcard"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Clients
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- DOSSIERS -->
+
+
+
+                {% if request.user|has_perm_metier:"dossiers.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'dossier_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'dossier' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-folder2-open"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Dossiers
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- SERVICES -->
+
+                <!-- ===================================== -->
+
+
+
+                {% if request.user|has_perm_metier:"visa.view" or request.user|has_perm_metier:"ticketing.view" or request.user|has_perm_metier:"missions.view" %}
+
+
+
+                    <div class="menu-label">
+
+                        Services
+
+                    </div>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- VISA -->
+
+
+
+                {% if request.user|has_perm_metier:"visa.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'visa_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'visa' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-passport"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Visa
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- BILLETTERIE -->
+
+
+
+                {% if request.user|has_perm_metier:"ticketing.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'billet_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'billet' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-ticket-perforated"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Billetterie
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- MISSIONS -->
+
+
+
+                {% if request.user|has_perm_metier:"missions.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'mission_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'mission' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Missions
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- FINANCE -->
+
+                <!-- ===================================== -->
+
+
+
+                {% if request.user|has_perm_metier:"payments.view" %}
+
+
+
+                    <div class="menu-label">
+
+                        Finance
+
+                    </div>
+
+
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'paiement_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'paiement' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-wallet2"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Paiements
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- WORKSPACE -->
+
+                <!-- ===================================== -->
+
+
+
+                <div class="menu-label">
+
+                    Espace de travail
+
+                </div>
+
+
+
+
+
+                <!-- TASKS -->
+
+
+
+                {% if request.user|has_perm_metier:"tasks.view" %}
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'task_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'task' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-check2-square"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Mes tâches
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+                <!-- NOTIFICATIONS -->
+
+
+
+                <li class="bmt-menu-item">
+
+
+
+                    <a
+
+                        href="{% url 'notification_list' %}"
+
+                        class="bmt-menu-link
+
+                        {% if 'notification' in request.resolver_match.url_name %}
+
+                            active
+
+                        {% endif %}"
+
+                    >
+
+
+
+                        <span class="menu-icon">
+
+                            <i class="bi bi-bell"></i>
+
+                        </span>
+
+
+
+                        <span class="menu-text">
+
+                            Notifications
+
+                        </span>
+
+
+
+
+
+                        {% if unread_notifications_count > 0 %}
+
+
+
+                            <span class="menu-badge">
+
+                                {{ unread_notifications_count }}
+
+                            </span>
+
+
+
+                        {% endif %}
+
+
+
+                    </a>
+
+
+
+                </li>
+
+
+
+
+
+                <!-- ===================================== -->
+
+                <!-- ANALYTICS -->
+
+                <!-- ===================================== -->
+
+
+
+                {% if request.user|has_perm_metier:"reports.view" %}
+
+
+
+                    <div class="menu-label">
+
+                        Analyse
+
+                    </div>
+
+
+
+
+
+                    <!-- RAPPORTS -->
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'report_dashboard' %}"
+
+                            class="bmt-menu-link
+
+                            {% if request.resolver_match.url_name == 'report_dashboard' %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-bar-chart"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Rapports
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+
+
+                    <!-- HISTORIQUE -->
+
+
+
+                    <li class="bmt-menu-item">
+
+
+
+                        <a
+
+                            href="{% url 'historique_list' %}"
+
+                            class="bmt-menu-link
+
+                            {% if 'historique' in request.resolver_match.url_name %}
+
+                                active
+
+                            {% endif %}"
+
+                        >
+
+
+
+                            <span class="menu-icon">
+
+                                <i class="bi bi-clock-history"></i>
+
+                            </span>
+
+
+
+                            <span class="menu-text">
+
+                                Historique
+
+                            </span>
+
+
+
+                        </a>
+
+
+
+                    </li>
+
+
+
+                {% endif %}
+
+
+
+
+
+            {% endif %}
+
+
+
+        </ul>
+
+
+
+    </div>
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- USER FOOTER -->
+
+    <!-- ================================================= -->
+
+
+
+    <div class="sidebar-footer">
+
+
+
+
+
+        {% if employe %}
+
+
+
+            <div class="sidebar-user">
+
+
+
+                <div class="sidebar-avatar">
+
+
+
+                    {% if request.user.first_name %}
+
+
+
+                        {{ request.user.first_name|slice:":1"|upper }}
+
+
+
+                    {% else %}
+
+
+
+                        {{ request.user.username|slice:":1"|upper }}
+
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+
+
+                <div class="sidebar-user-info">
+
+
+
+                    <div class="sidebar-user-name">
+
+
+
+                        {% if request.user.get_full_name %}
+
+
+
+                            {{ request.user.get_full_name }}
+
+
+
+                        {% else %}
+
+
+
+                            {{ request.user.username }}
+
+
+
+                        {% endif %}
+
+
+
+                    </div>
+
+
+
+
+
+                    <div class="sidebar-user-role">
+
+
+
+                        {% if employe.role %}
+
+
+
+                            {{ employe.role.nom }}
+
+
+
+                        {% else %}
+
+
+
+                            Employé
+
+
+
+                        {% endif %}
+
+
+
+
+
+                        {% if employe.agence %}
+
+
+
+                            • {{ employe.agence.ville }}
+
+
+
+                        {% endif %}
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        {% endif %}
+
+
+
+
+
+        <a
+
+            href="{% url 'logout' %}"
+
+            class="logout-btn"
+
+        >
+
+
+
+            <i class="bi bi-box-arrow-right"></i>
+
+
+
+            Déconnexion
+
+
+
+        </a>
+
+
+
+    </div>
+
+
+
+
+
+</aside>
+
+
+
+
+
+<!-- ===================================================== -->
+
+<!-- APPLICATION -->
+
+<!-- ===================================================== -->
+
+
+
+<div class="bmt-app">
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- TOPBAR -->
+
+    <!-- ================================================= -->
+
+
+
+    <header class="bmt-topbar">
+
+
+
+
+
+        <div class="topbar-left">
+
+
+
+
+
+            <!-- MOBILE MENU -->
+
+
+
+            <button
+
+                type="button"
+
+                class="mobile-menu-btn"
+
+                id="mobileMenuBtn"
+
+            >
+
+
+
+                <i class="bi bi-list"></i>
+
+
+
+            </button>
+
+
+
+
+
+            <div>
+
+
+
+                <div class="topbar-heading">
+
+                    Système de Gestion Interne
+
+                </div>
+
+
+
+                <div class="topbar-subheading">
+
+
+
+                    {% if employe and employe.agence %}
+
+
+
+                        {{ employe.agence.nom }}
+
+                        •
+
+                        {{ employe.agence.ville }}
+
+
+
+                    {% else %}
+
+
+
+                        BMT Tourisme
+
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="topbar-right">
+
+
+
+
+
+            <!-- NOTIFICATION -->
+
+
+
+            {% if employe %}
+
+
+
+                <a
+
+                    href="{% url 'notification_list' %}"
+
+                    class="topbar-action"
+
+                    title="Notifications"
+
+                >
+
+
+
+                    <i class="bi bi-bell"></i>
+
+
+
+
+
+                    {% if unread_notifications_count > 0 %}
+
+
+
+                        <span class="notification-dot">
+
+
+
+                            {% if unread_notifications_count > 99 %}
+
+
+
+                                99+
+
+
+
+                            {% else %}
+
+
+
+                                {{ unread_notifications_count }}
+
+
+
+                            {% endif %}
+
+
+
+                        </span>
+
+
+
+                    {% endif %}
+
+
+
+                </a>
+
+
+
+            {% endif %}
+
+
+
+
+
+            <!-- PROFILE -->
+
+
+
+            <div class="topbar-profile">
+
+
+
+                <div class="topbar-avatar">
+
+
+
+                    {% if request.user.first_name %}
+
+
+
+                        {{ request.user.first_name|slice:":1"|upper }}
+
+
+
+                    {% else %}
+
+
+
+                        {{ request.user.username|slice:":1"|upper }}
+
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+
+
+                <div class="topbar-profile-info">
+
+
+
+                    <div class="topbar-profile-name">
+
+
+
+                        {% if request.user.get_full_name %}
+
+
+
+                            {{ request.user.get_full_name }}
+
+
+
+                        {% else %}
+
+
+
+                            {{ request.user.username }}
+
+
+
+                        {% endif %}
+
+
+
+                    </div>
+
+
+
+
+
+                    <div class="topbar-profile-role">
+
+
+
+                        {% if employe and employe.role %}
+
+
+
+                            {{ employe.role.nom }}
+
+
+
+                        {% elif request.user.is_superuser %}
+
+
+
+                            Super administrateur
+
+
+
+                        {% else %}
+
+
+
+                            Utilisateur
+
+
+
+                        {% endif %}
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+    </header>
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- DJANGO MESSAGES -->
+
+    <!-- ================================================= -->
+
+
+
+    {% if messages %}
+
+
+
+        <div class="messages-wrapper">
+
+
+
+            {% for message in messages %}
+
+
+
+                <div
+
+                    class="
+
+                        alert
+
+                        alert-dismissible
+
+                        fade
+
+                        show
+
+
+
+                        {% if message.tags == 'error' %}
+
+                            alert-danger
+
+                        {% elif message.tags == 'success' %}
+
+                            alert-success
+
+                        {% elif message.tags == 'warning' %}
+
+                            alert-warning
+
+                        {% else %}
+
+                            alert-info
+
+                        {% endif %}
+
+                    "
+
+                    role="alert"
+
+                >
+
+
+
+                    {% if message.tags == 'success' %}
+
+
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+
+
+                    {% elif message.tags == 'error' %}
+
+
+
+                        <i class="bi bi-exclamation-circle me-2"></i>
+
+
+
+                    {% elif message.tags == 'warning' %}
+
+
+
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+
+
+
+                    {% else %}
+
+
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+
+
+                    {% endif %}
+
+
+
+
+
+                    {{ message }}
+
+
+
+
+
+                    <button
+
+                        type="button"
+
+                        class="btn-close"
+
+                        data-bs-dismiss="alert"
+
+                    ></button>
+
+
+
+                </div>
+
+
+
+            {% endfor %}
+
+
+
+        </div>
+
+
+
+    {% endif %}
+
+
+
+
+
+    <!-- ================================================= -->
+
+    <!-- PAGE CONTENT -->
+
+    <!-- ================================================= -->
+
+
+
+    <main class="bmt-content">
+
+
+
+        <div class="page-animation">
+
+
+
+            {% block content %}
+
+            {% endblock %}
+
+
+
+        </div>
+
+
+
+    </main>
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- ===================================================== -->
+
+<!-- BOOTSTRAP JS -->
+
+<!-- ===================================================== -->
+
+
+
+<script
+
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+
+</script>
+
+
+
+
+
+<!-- ===================================================== -->
+
+<!-- BASE JAVASCRIPT -->
+
+<!-- ===================================================== -->
+
+
+
+<script>
+
+
+
+    document.addEventListener(
+
+        "DOMContentLoaded",
+
+        function () {
+
+
+
+            const mobileMenuBtn =
+
+                document.getElementById(
+
+                    "mobileMenuBtn"
+
+                );
+
+
+
+            const sidebarOverlay =
+
+                document.getElementById(
+
+                    "sidebarOverlay"
+
+                );
+
+
+
+
+
+            if (mobileMenuBtn) {
+
+
+
+                mobileMenuBtn.addEventListener(
+
+                    "click",
+
+                    function () {
+
+
+
+                        document.body.classList.toggle(
+
+                            "sidebar-open"
+
+                        );
+
+
+
+                    }
+
+                );
+
+
+
+            }
+
+
+
+
+
+            if (sidebarOverlay) {
+
+
+
+                sidebarOverlay.addEventListener(
+
+                    "click",
+
+                    function () {
+
+
+
+                        document.body.classList.remove(
+
+                            "sidebar-open"
+
+                        );
+
+
+
+                    }
+
+                );
+
+
+
+            }
+
+
+
+
+
+            /*
+
+             \* Close sidebar automatically after clicking
+
+             \* a menu item on mobile.
+
+             */
+
+
+
+            document
+
+                .querySelectorAll(
+
+                    ".bmt-menu-link"
+
+                )
+
+                .forEach(
+
+                    function (link) {
+
+
+
+                        link.addEventListener(
+
+                            "click",
+
+                            function () {
+
+
+
+                                if (
+
+                                    window.innerWidth < 992
+
+                                ) {
+
+
+
+                                    document.body.classList.remove(
+
+                                        "sidebar-open"
+
+                                    );
+
+
+
+                                }
+
+
+
+                            }
+
+                        );
+
+
+
+                    }
+
+                );
+
+
+
+        }
+
+    );
+
+
+
+</script>
+
+
+
+
+
+{% block extra_js %}
+
+{% endblock %}
+
+
+
+
+
+</body>
+
+
+
+</html>

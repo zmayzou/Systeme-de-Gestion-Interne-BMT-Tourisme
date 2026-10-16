@@ -1,0 +1,153 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Billetterie - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Gestion de la billetterie</h2>
+        <p class="text-muted mb-0">
+            Réservations et billets clients
+        </p>
+    </div>
+
+    <a href="{% url 'billet_create' %}" class="btn btn-primary">
+        Ajouter un billet
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Dossier</th>
+                        <th>Client</th>
+                        <th>Type</th>
+                        <th>Trajet</th>
+                        <th>Départ</th>
+                        <th>Prix</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for billet in billets %}
+
+                <tr>
+
+                    <td>
+                        {{ billet.dossier.numero_dossier }}
+                    </td>
+
+                    <td>
+                        {{ billet.dossier.client.nom }}
+                        {{ billet.dossier.client.prenom }}
+                    </td>
+
+                    <td>
+                        {{ billet.get_type_billet_display }}
+                    </td>
+
+                    <td>
+                        {{ billet.ville_depart }}
+                        →
+                        {{ billet.ville_arrivee }}
+                    </td>
+
+                    <td>
+                        {{ billet.date_depart|date:"d/m/Y H:i" }}
+                    </td>
+
+                    <td>
+                        {% if billet.prix %}
+                            {{ billet.prix }} MAD
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        {% if billet.statut == "BILLET_EMIS" %}
+
+                            <span class="badge bg-success">
+                                {{ billet.get_statut_display }}
+                            </span>
+
+                        {% elif billet.statut == "ANNULE" %}
+
+                            <span class="badge bg-danger">
+                                {{ billet.get_statut_display }}
+                            </span>
+
+                        {% elif billet.statut == "RESERVE" %}
+
+                            <span class="badge bg-primary">
+                                {{ billet.get_statut_display }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                {{ billet.get_statut_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="{% url 'billet_detail' billet.id %}"
+                            class="btn btn-sm btn-info"
+                        >
+                            Voir
+                        </a>
+
+                        <a
+                            href="{% url 'billet_update' billet.id %}"
+                            class="btn btn-sm btn-warning"
+                        >
+                            Modifier
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="8" class="text-center text-muted">
+                        Aucun billet enregistré.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

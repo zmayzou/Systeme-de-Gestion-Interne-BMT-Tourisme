@@ -1,0 +1,168 @@
+{% extends 'accounts/base.html' %}
+{% load permission_tags %}
+
+{% block title %}Détail Mission{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Détail de la mission</h2>
+
+        <p class="text-muted mb-0">
+            {{ mission.lieu }}
+        </p>
+    </div>
+
+    <div>
+
+        {% if request.user|has_perm_metier:"missions.update_status" %}
+
+            <a href="{% url 'mission_update_status' mission.id %}"
+               class="btn btn-primary">
+                Changer le statut
+            </a>
+
+        {% endif %}
+
+
+        {% if request.user|has_perm_metier:"missions.manage" %}
+
+            <a href="{% url 'mission_update' mission.id %}"
+               class="btn btn-warning">
+                Modifier
+            </a>
+
+        {% endif %}
+
+
+        <a href="{% url 'mission_list' %}"
+           class="btn btn-secondary">
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Guide :</strong>
+                <br>
+
+                {{ mission.guide }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Dossier :</strong>
+                <br>
+
+                <a href="{% url 'dossier_detail' mission.dossier.id %}">
+                    {{ mission.dossier.numero_dossier }}
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Client :</strong>
+                <br>
+
+                {{ mission.dossier.client.nom }}
+                {{ mission.dossier.client.prenom }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Lieu :</strong>
+                <br>
+
+                {{ mission.lieu }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Début :</strong>
+                <br>
+
+                {{ mission.date_debut|date:"d/m/Y H:i" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Fin :</strong>
+                <br>
+
+                {{ mission.date_fin|date:"d/m/Y H:i" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Statut :</strong>
+                <br>
+
+                {% if mission.statut == "TERMINEE" %}
+
+                    <span class="badge bg-success">
+                        {{ mission.get_statut_display }}
+                    </span>
+
+                {% elif mission.statut == "ANNULEE" %}
+
+                    <span class="badge bg-danger">
+                        {{ mission.get_statut_display }}
+                    </span>
+
+                {% elif mission.statut == "EN_COURS" %}
+
+                    <span class="badge bg-primary">
+                        {{ mission.get_statut_display }}
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-secondary">
+                        {{ mission.get_statut_display }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-12">
+
+                <strong>Commentaire :</strong>
+                <br>
+
+                {{ mission.commentaire|default:"Aucun commentaire." }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

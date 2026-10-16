@@ -1,0 +1,291 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Mission Guide - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">
+
+            {% if mission %}
+                Modifier la mission
+            {% else %}
+                Nouvelle mission
+            {% endif %}
+
+        </h2>
+
+        <p class="text-muted mb-0">
+            Planification d'une mission pour un guide
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+
+                <!-- GUIDE -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Guide
+                    </label>
+
+                    <select
+                        name="guide"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Choisir un guide
+                        </option>
+
+                        {% for guide in guides %}
+
+                            <option
+                                value="{{ guide.id }}"
+                                {% if mission and mission.guide_id == guide.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ guide }}
+
+                                {% if guide.employe.agence %}
+                                    - {{ guide.employe.agence.ville }}
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <div class="form-text">
+                        Seuls les guides actifs sont proposés lors de la création.
+                    </div>
+
+                </div>
+
+
+                <!-- DOSSIER -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Dossier
+                    </label>
+
+                    <select
+                        name="dossier"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Choisir un dossier
+                        </option>
+
+                        {% for dossier in dossiers %}
+
+                            <option
+                                value="{{ dossier.id }}"
+                                {% if mission and mission.dossier_id == dossier.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ dossier.numero_dossier }}
+                                -
+                                {{ dossier.client.nom }}
+                                {{ dossier.client.prenom }}
+
+                                {% if dossier.agence %}
+                                    - {{ dossier.agence.ville }}
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- LIEU -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Lieu
+                    </label>
+
+                    <input
+                        type="text"
+                        name="lieu"
+                        class="form-control"
+                        value="{{ mission.lieu|default:'' }}"
+                        placeholder="Exemple : Marrakech"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- STATUT -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Statut
+                    </label>
+
+                    <select
+                        name="statut"
+                        class="form-select"
+                        required
+                    >
+
+                        <option
+                            value="PLANIFIEE"
+                            {% if not mission or mission.statut == "PLANIFIEE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Planifiée
+                        </option>
+
+                        <option
+                            value="EN_COURS"
+                            {% if mission and mission.statut == "EN_COURS" %}
+                                selected
+                            {% endif %}
+                        >
+                            En cours
+                        </option>
+
+                        <option
+                            value="TERMINEE"
+                            {% if mission and mission.statut == "TERMINEE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Terminée
+                        </option>
+
+                        <option
+                            value="ANNULEE"
+                            {% if mission and mission.statut == "ANNULEE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Annulée
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE DEBUT -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Date de début
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="date_debut"
+                        class="form-control"
+                        value="{% if mission and mission.date_debut %}{{ mission.date_debut|date:'Y-m-d\TH:i' }}{% endif %}"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DATE FIN -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Date de fin
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="date_fin"
+                        class="form-control"
+                        value="{% if mission and mission.date_fin %}{{ mission.date_fin|date:'Y-m-d\TH:i' }}{% endif %}"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- COMMENTAIRE -->
+
+                <div class="col-12 mb-3">
+
+                    <label class="form-label">
+                        Commentaire
+                    </label>
+
+                    <textarea
+                        name="commentaire"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Informations complémentaires sur la mission..."
+                    >{{ mission.commentaire|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Enregistrer
+            </button>
+
+
+            <a
+                href="{% url 'mission_list' %}"
+                class="btn btn-secondary"
+            >
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

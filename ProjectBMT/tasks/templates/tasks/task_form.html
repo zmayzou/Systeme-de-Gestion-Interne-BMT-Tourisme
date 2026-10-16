@@ -1,0 +1,367 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Tâche - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">
+
+            {% if tache %}
+                Modifier la tâche
+            {% else %}
+                Ajouter une tâche
+            {% endif %}
+
+        </h2>
+
+        <p class="text-muted mb-0">
+            Gestion des tâches internes
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+
+                <!-- TITRE -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Titre
+                    </label>
+
+                    <input
+                        type="text"
+                        name="titre"
+                        class="form-control"
+                        value="{{ tache.titre|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DOSSIER -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Dossier
+                    </label>
+
+                    <select
+                        name="dossier"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Choisir un dossier
+                        </option>
+
+                        {% for dossier in dossiers %}
+
+                            <option
+                                value="{{ dossier.id }}"
+
+                                {% if tache and tache.dossier_id == dossier.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ dossier.numero_dossier }}
+                                -
+                                {{ dossier.client.nom }}
+                                {{ dossier.client.prenom }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- RESPONSABLE -->
+
+                {% if can_assign %}
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Responsable
+                        </label>
+
+                        <select
+                            name="responsable"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Non assignée
+                            </option>
+
+                            {% for emp in employes %}
+
+                                <option
+                                    value="{{ emp.id }}"
+
+                                    {% if tache and tache.responsable_id == emp.id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ emp }}
+
+                                    {% if emp.role %}
+                                        - {{ emp.role.nom }}
+                                    {% endif %}
+
+                                    {% if emp.agence %}
+                                        - {{ emp.agence.ville }}
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="form-text">
+                            Sélectionnez l'employé responsable de cette tâche.
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Responsable
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{% if tache and tache.responsable %}{{ tache.responsable }}{% else %}Vous-même{% endif %}"
+                            disabled
+                        >
+
+                        <div class="form-text">
+                            Vous ne pouvez pas assigner cette tâche à un autre employé.
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- PRIORITE -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Priorité
+                    </label>
+
+                    <select
+                        name="priorite"
+                        class="form-select"
+                        required
+                    >
+
+                        <option
+                            value="FAIBLE"
+                            {% if tache and tache.priorite == "FAIBLE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Faible
+                        </option>
+
+
+                        <option
+                            value="MOYENNE"
+                            {% if not tache or tache.priorite == "MOYENNE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Moyenne
+                        </option>
+
+
+                        <option
+                            value="HAUTE"
+                            {% if tache and tache.priorite == "HAUTE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Haute
+                        </option>
+
+
+                        <option
+                            value="URGENTE"
+                            {% if tache and tache.priorite == "URGENTE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Urgente
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- STATUT -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Statut
+                    </label>
+
+                    <select
+                        name="statut"
+                        class="form-select"
+                        required
+                    >
+
+                        <option
+                            value="A_FAIRE"
+                            {% if not tache or tache.statut == "A_FAIRE" %}
+                                selected
+                            {% endif %}
+                        >
+                            À faire
+                        </option>
+
+
+                        <option
+                            value="EN_COURS"
+                            {% if tache and tache.statut == "EN_COURS" %}
+                                selected
+                            {% endif %}
+                        >
+                            En cours
+                        </option>
+
+
+                        <option
+                            value="EN_ATTENTE"
+                            {% if tache and tache.statut == "EN_ATTENTE" %}
+                                selected
+                            {% endif %}
+                        >
+                            En attente
+                        </option>
+
+
+                        <option
+                            value="TERMINEE"
+                            {% if tache and tache.statut == "TERMINEE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Terminée
+                        </option>
+
+
+                        <option
+                            value="ANNULEE"
+                            {% if tache and tache.statut == "ANNULEE" %}
+                                selected
+                            {% endif %}
+                        >
+                            Annulée
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE ECHEANCE -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Date d'échéance
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="date_echeance"
+                        class="form-control"
+                        value="{% if tache and tache.date_echeance %}{{ tache.date_echeance|date:'Y-m-d\TH:i' }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="col-12 mb-3">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Description de la tâche..."
+                    >{{ tache.description|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Enregistrer
+            </button>
+
+
+            <a
+                href="{% url 'task_list' %}"
+                class="btn btn-secondary"
+            >
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Notifications - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Notifications</h2>
+        <p class="text-muted mb-0">
+            Consultez vos notifications
+        </p>
+    </div>
+
+    <a
+        href="{% url 'notification_mark_all_read' %}"
+        class="btn btn-outline-primary"
+    >
+        Tout marquer comme lu
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        {% for notification in notifications %}
+
+            <div class="
+                border rounded p-3 mb-3
+                {% if not notification.est_lue %}
+                    bg-light
+                {% endif %}
+            ">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <h5 class="mb-1">
+
+                            {{ notification.titre }}
+
+                            {% if not notification.est_lue %}
+                                <span class="badge bg-primary">
+                                    Nouveau
+                                </span>
+                            {% endif %}
+
+                        </h5>
+
+                        <p class="mb-2">
+                            {{ notification.message }}
+                        </p>
+
+                        <small class="text-muted">
+                            {{ notification.date_creation|date:"d/m/Y H:i" }}
+                        </small>
+
+                    </div>
+
+
+                    <div class="d-flex gap-2 align-items-start">
+
+                        {% if not notification.est_lue %}
+
+                            <a
+                                href="{% url 'notification_mark_read' notification.id %}"
+                                class="btn btn-sm btn-success"
+                            >
+                                Marquer comme lue
+                            </a>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'notification_delete' notification.id %}"
+                            class="btn btn-sm btn-danger"
+                        >
+                            Supprimer
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="text-center text-muted py-4">
+                Aucune notification.
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

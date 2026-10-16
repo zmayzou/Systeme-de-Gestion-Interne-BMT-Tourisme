@@ -1,0 +1,177 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Document - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+
+    <h2>
+
+        {% if document %}
+            Modifier le document
+        {% else %}
+            Ajouter un document
+        {% endif %}
+
+    </h2>
+
+    <p class="text-muted">
+        Dossier :
+        {{ dossier.numero_dossier }}
+    </p>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Nom du document
+                </label>
+
+                <input
+                    type="text"
+                    name="nom"
+                    class="form-control"
+                    value="{{ document.nom|default:'' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Fichier
+                </label>
+
+                <input
+                    type="file"
+                    name="fichier"
+                    class="form-control"
+                >
+
+
+                {% if document.fichier %}
+
+                    <div class="mt-2">
+
+                        <small>
+                            Fichier actuel :
+                        </small>
+
+                        <a
+                            href="{{ document.fichier.url }}"
+                            target="_blank"
+                        >
+                            Voir le fichier
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Statut
+                </label>
+
+                <select
+                    name="statut"
+                    class="form-select"
+                    required
+                >
+
+                    <option
+                        value="RECU"
+                        {% if document.statut == 'RECU' %}selected{% endif %}
+                    >
+                        Reçu
+                    </option>
+
+
+                    <option
+                        value="VALIDE"
+                        {% if document.statut == 'VALIDE' %}selected{% endif %}
+                    >
+                        Validé
+                    </option>
+
+
+                    <option
+                        value="MANQUANT"
+                        {% if document.statut == 'MANQUANT' %}selected{% endif %}
+                    >
+                        Manquant
+                    </option>
+
+
+                    <option
+                        value="REFUSE"
+                        {% if document.statut == 'REFUSE' %}selected{% endif %}
+                    >
+                        Refusé
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Commentaire
+                </label>
+
+                <textarea
+                    name="commentaire"
+                    class="form-control"
+                    rows="4"
+                >{{ document.commentaire|default:'' }}</textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+                Enregistrer
+            </button>
+
+
+            <a
+                href="{% url 'dossier_detail' dossier.id %}"
+                class="btn btn-secondary"
+            >
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

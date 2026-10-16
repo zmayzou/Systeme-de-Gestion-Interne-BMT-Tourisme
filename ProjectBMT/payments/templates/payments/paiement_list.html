@@ -1,0 +1,116 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Paiements - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Gestion des paiements</h2>
+        <p class="text-muted mb-0">
+            Avances, paiements, soldes et remboursements
+        </p>
+    </div>
+
+    <a href="{% url 'paiement_create' %}" class="btn btn-primary">
+        Ajouter un paiement
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Dossier</th>
+                        <th>Client</th>
+                        <th>Type</th>
+                        <th>Montant</th>
+                        <th>Mode</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for paiement in paiements %}
+
+                    <tr>
+
+                        <td>
+                            {{ paiement.dossier.numero_dossier }}
+                        </td>
+
+                        <td>
+                            {{ paiement.dossier.client.nom }}
+                            {{ paiement.dossier.client.prenom }}
+                        </td>
+
+                        <td>
+                            {{ paiement.get_type_paiement_display }}
+                        </td>
+
+                        <td>
+                            <strong>{{ paiement.montant }} MAD</strong>
+                        </td>
+
+                        <td>
+                            {{ paiement.get_mode_paiement_display }}
+                        </td>
+
+                        <td>
+                            {{ paiement.date_paiement|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'paiement_detail' paiement.id %}"
+                                class="btn btn-sm btn-info"
+                            >
+                                Voir
+                            </a>
+
+                            <a
+                                href="{% url 'paiement_update' paiement.id %}"
+                                class="btn btn-sm btn-warning"
+                            >
+                                Modifier
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            Aucun paiement enregistré.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

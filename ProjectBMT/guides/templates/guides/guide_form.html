@@ -1,0 +1,96 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Ajouter Guide{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Ajouter un guide</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Employé
+                </label>
+
+                <select name="employe" class="form-select" required>
+
+                    <option value="">
+                        Choisir un employé
+                    </option>
+
+                    {% for emp in employes %}
+                        <option value="{{ emp.id }}">
+                            {{ emp }}
+                            {% if emp.agence %}
+                                - {{ emp.agence }}
+                            {% endif %}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Langues
+                </label>
+
+                <input
+                    type="text"
+                    name="langues"
+                    class="form-control"
+                    placeholder="Arabe, Français, Anglais..."
+                >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Spécialité
+                </label>
+
+                <input
+                    type="text"
+                    name="specialite"
+                    class="form-control"
+                    placeholder="Circuits touristiques, désert..."
+                >
+            </div>
+
+            <div class="form-check mb-3">
+                <input
+                    type="checkbox"
+                    name="est_disponible"
+                    class="form-check-input"
+                    id="disponible"
+                    checked
+                >
+
+                <label
+                    class="form-check-label"
+                    for="disponible"
+                >
+                    Guide disponible
+                </label>
+            </div>
+
+            <button class="btn btn-success" type="submit">
+                Enregistrer
+            </button>
+
+            <a href="{% url 'guide_list' %}"
+               class="btn btn-secondary">
+                Annuler
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

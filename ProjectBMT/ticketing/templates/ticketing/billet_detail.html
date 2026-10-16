@@ -1,0 +1,130 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Billet - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Détail du billet</h2>
+
+        <p class="text-muted mb-0">
+            Dossier {{ billet.dossier.numero_dossier }}
+        </p>
+    </div>
+
+    <div>
+
+        <a
+            href="{% url 'billet_update' billet.id %}"
+            class="btn btn-warning"
+        >
+            Modifier
+        </a>
+
+        <a
+            href="{% url 'billet_list' %}"
+            class="btn btn-secondary"
+        >
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <strong>Client :</strong><br>
+
+                {{ billet.dossier.client.nom }}
+                {{ billet.dossier.client.prenom }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Dossier :</strong><br>
+
+                <a href="{% url 'dossier_detail' billet.dossier.id %}">
+                    {{ billet.dossier.numero_dossier }}
+                </a>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Type :</strong><br>
+                {{ billet.get_type_billet_display }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Compagnie :</strong><br>
+                {{ billet.compagnie }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Trajet :</strong><br>
+
+                {{ billet.ville_depart }}
+                →
+                {{ billet.ville_arrivee }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Responsable :</strong><br>
+                {{ billet.responsable|default:"-" }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Départ :</strong><br>
+                {{ billet.date_depart|date:"d/m/Y H:i" }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Retour :</strong><br>
+
+                {% if billet.date_retour %}
+                    {{ billet.date_retour|date:"d/m/Y H:i" }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Prix :</strong><br>
+
+                {% if billet.prix %}
+                    {{ billet.prix }} MAD
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Référence :</strong><br>
+                {{ billet.reference_reservation|default:"-" }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Statut :</strong><br>
+                {{ billet.get_statut_display }}
+            </div>
+
+            <div class="col-12">
+                <strong>Commentaire :</strong><br>
+                {{ billet.commentaire|default:"Aucun commentaire." }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

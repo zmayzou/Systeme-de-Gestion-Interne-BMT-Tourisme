@@ -1,0 +1,279 @@
+{% extends 'accounts/base.html' %}
+{% load permission_tags %}
+
+{% block title %}
+Missions - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">
+
+            {% if can_manage %}
+                Gestion des missions
+            {% else %}
+                Mes missions
+            {% endif %}
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            {% if can_manage %}
+                Planification et suivi des missions des guides
+            {% else %}
+                Consultez et suivez vos missions
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    {% if request.user|has_perm_metier:"missions.manage" %}
+
+        <div>
+
+            <a
+                href="{% url 'guide_list' %}"
+                class="btn btn-outline-secondary"
+            >
+                Guides
+            </a>
+
+            <a
+                href="{% url 'mission_create' %}"
+                class="btn btn-primary"
+            >
+                Ajouter une mission
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Guide</th>
+                        <th>Agence</th>
+                        <th>Dossier</th>
+                        <th>Client</th>
+                        <th>Lieu</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for mission in missions %}
+
+                        <tr>
+
+                            <!-- GUIDE -->
+
+                            <td>
+
+                                <strong>
+                                    {{ mission.guide }}
+                                </strong>
+
+                            </td>
+
+
+                            <!-- AGENCE -->
+
+                            <td>
+
+                                {% if mission.guide.employe.agence %}
+
+                                    {{ mission.guide.employe.agence.nom }}
+
+                                    <div class="small text-muted">
+                                        {{ mission.guide.employe.agence.ville }}
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- DOSSIER -->
+
+                            <td>
+
+                                <a href="{% url 'dossier_detail' mission.dossier.id %}">
+                                    {{ mission.dossier.numero_dossier }}
+                                </a>
+
+                            </td>
+
+
+                            <!-- CLIENT -->
+
+                            <td>
+
+                                {{ mission.dossier.client.nom }}
+                                {{ mission.dossier.client.prenom }}
+
+                            </td>
+
+
+                            <!-- LIEU -->
+
+                            <td>
+
+                                {{ mission.lieu }}
+
+                            </td>
+
+
+                            <!-- DEBUT -->
+
+                            <td>
+
+                                {{ mission.date_debut|date:"d/m/Y H:i" }}
+
+                            </td>
+
+
+                            <!-- FIN -->
+
+                            <td>
+
+                                {{ mission.date_fin|date:"d/m/Y H:i" }}
+
+                            </td>
+
+
+                            <!-- STATUT -->
+
+                            <td>
+
+                                {% if mission.statut == "TERMINEE" %}
+
+                                    <span class="badge bg-success">
+                                        {{ mission.get_statut_display }}
+                                    </span>
+
+                                {% elif mission.statut == "ANNULEE" %}
+
+                                    <span class="badge bg-danger">
+                                        {{ mission.get_statut_display }}
+                                    </span>
+
+                                {% elif mission.statut == "EN_COURS" %}
+
+                                    <span class="badge bg-primary">
+                                        {{ mission.get_statut_display }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ mission.get_statut_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <a
+                                    href="{% url 'mission_detail' mission.id %}"
+                                    class="btn btn-sm btn-info"
+                                >
+                                    Voir
+                                </a>
+
+
+                                {% if request.user|has_perm_metier:"missions.manage" %}
+
+                                    <a
+                                        href="{% url 'mission_update' mission.id %}"
+                                        class="btn btn-sm btn-warning"
+                                    >
+                                        Modifier
+                                    </a>
+
+                                {% endif %}
+
+
+                                {% if request.user|has_perm_metier:"missions.update_status" %}
+
+                                    <a
+                                        href="{% url 'mission_update_status' mission.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+                                        Statut
+                                    </a>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="9"
+                                class="text-center text-muted py-4"
+                            >
+
+                                {% if can_manage %}
+                                    Aucune mission enregistrée.
+                                {% else %}
+                                    Aucune mission ne vous est assignée.
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

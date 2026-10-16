@@ -1,0 +1,140 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+{{ tache.titre }} - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>{{ tache.titre }}</h2>
+
+        <p class="text-muted mb-0">
+            Dossier {{ tache.dossier.numero_dossier }}
+        </p>
+    </div>
+
+
+    <div>
+
+        <a
+            href="{% url 'task_update' tache.id %}"
+            class="btn btn-warning"
+        >
+            Modifier
+        </a>
+
+        <a
+            href="{% url 'task_list' %}"
+            class="btn btn-secondary"
+        >
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="row">
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Dossier :</strong>
+
+                <br>
+
+                <a href="{% url 'dossier_detail' tache.dossier.id %}">
+                    {{ tache.dossier.numero_dossier }}
+                </a>
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Responsable :</strong>
+
+                <br>
+
+                {{ tache.responsable|default:"Non assignée" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Priorité :</strong>
+
+                <br>
+
+                {{ tache.get_priorite_display }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Statut :</strong>
+
+                <br>
+
+                {{ tache.get_statut_display }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Créée par :</strong>
+
+                <br>
+
+                {{ tache.cree_par|default:"-" }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>Échéance :</strong>
+
+                <br>
+
+                {% if tache.date_echeance %}
+
+                    {{ tache.date_echeance|date:"d/m/Y H:i" }}
+
+                {% else %}
+
+                    -
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="col-12">
+
+                <strong>Description :</strong>
+
+                <br>
+
+                {{ tache.description|default:"Aucune description." }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

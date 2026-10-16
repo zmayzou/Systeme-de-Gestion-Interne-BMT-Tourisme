@@ -1,0 +1,1042 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Paiement - BMT Tourisme
+{% endblock %}
+
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">
+
+            {% if paiement %}
+                Modifier le paiement
+            {% else %}
+                Ajouter un paiement
+            {% endif %}
+
+        </h2>
+
+        <p class="text-muted mb-0">
+            Gestion des paiements clients
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="row">
+
+    <!-- ================================================= -->
+    <!-- FORMULAIRE -->
+    <!-- ================================================= -->
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <!-- ========================================= -->
+                        <!-- DOSSIER -->
+                        <!-- ========================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Dossier
+                            </label>
+
+                            <select
+                                name="dossier"
+                                id="dossierSelect"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Choisir un dossier
+                                </option>
+
+                                {% for dossier in dossiers %}
+
+                                    <option
+                                        value="{{ dossier.id }}"
+
+                                        data-numero="{{ dossier.numero_dossier }}"
+                                        data-client="{{ dossier.client.nom }} {{ dossier.client.prenom }}"
+
+                                        data-total="{{ dossier.montant_total }}"
+                                        data-paye="{{ dossier.montant_paye }}"
+                                        data-reste="{{ dossier.reste_a_payer }}"
+                                        data-avance="{{ dossier.total_avances }}"
+
+                                        {% if paiement and paiement.dossier_id == dossier.id %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ dossier.numero_dossier }}
+                                        -
+                                        {{ dossier.client.nom }}
+                                        {{ dossier.client.prenom }}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- TYPE -->
+                        <!-- ========================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Type de paiement
+                            </label>
+
+                            <select
+                                name="type_paiement"
+                                id="typePaiement"
+                                class="form-select"
+                                required
+                            >
+
+                                <option
+                                    value="AVANCE"
+                                    {% if paiement and paiement.type_paiement == "AVANCE" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Avance
+                                </option>
+
+                                <option
+                                    value="PAIEMENT"
+                                    {% if paiement and paiement.type_paiement == "PAIEMENT" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Paiement
+                                </option>
+
+                                <option
+                                    value="SOLDE"
+                                    {% if paiement and paiement.type_paiement == "SOLDE" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Solde
+                                </option>
+
+                                <option
+                                    value="REMBOURSEMENT"
+                                    {% if paiement and paiement.type_paiement == "REMBOURSEMENT" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Remboursement
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- MONTANT -->
+                        <!-- ========================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Montant
+                            </label>
+
+                            <div class="input-group">
+
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0.01"
+                                    name="montant"
+                                    id="montantInput"
+                                    class="form-control"
+                                    value="{{ paiement.montant|default:'' }}"
+                                    required
+                                >
+
+                                <span class="input-group-text">
+                                    MAD
+                                </span>
+
+                            </div>
+
+                            <div
+                                id="montantHelp"
+                                class="form-text"
+                            >
+                                Sélectionnez d'abord un dossier.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- MODE -->
+                        <!-- ========================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Mode de paiement
+                            </label>
+
+                            <select
+                                name="mode_paiement"
+                                class="form-select"
+                                required
+                            >
+
+                                <option
+                                    value="ESPECES"
+                                    {% if paiement and paiement.mode_paiement == "ESPECES" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Espèces
+                                </option>
+
+                                <option
+                                    value="CARTE"
+                                    {% if paiement and paiement.mode_paiement == "CARTE" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Carte bancaire
+                                </option>
+
+                                <option
+                                    value="VIREMENT"
+                                    {% if paiement and paiement.mode_paiement == "VIREMENT" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Virement
+                                </option>
+
+                                <option
+                                    value="CHEQUE"
+                                    {% if paiement and paiement.mode_paiement == "CHEQUE" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Chèque
+                                </option>
+
+                                <option
+                                    value="AUTRE"
+                                    {% if paiement and paiement.mode_paiement == "AUTRE" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Autre
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- REFERENCE -->
+                        <!-- ========================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Référence
+                            </label>
+
+                            <input
+                                type="text"
+                                name="reference"
+                                class="form-control"
+                                value="{{ paiement.reference|default:'' }}"
+                                placeholder="Ex : VIR-2026-001"
+                            >
+
+                            <div class="form-text">
+                                Optionnel pour les paiements avec référence.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- COMMENTAIRE -->
+                        <!-- ========================================= -->
+
+                        <div class="col-12 mb-3">
+
+                            <label class="form-label">
+                                Commentaire
+                            </label>
+
+                            <textarea
+                                name="commentaire"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Ajouter une remarque si nécessaire..."
+                            >{{ paiement.commentaire|default:'' }}</textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        id="submitButton"
+                    >
+                        Enregistrer
+                    </button>
+
+
+                    <a
+                        href="{% url 'paiement_list' %}"
+                        class="btn btn-secondary"
+                    >
+                        Annuler
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- INFORMATIONS FINANCIERES -->
+    <!-- ================================================= -->
+
+    <div class="col-lg-4 mt-4 mt-lg-0">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-white">
+
+                <strong>
+                    Situation du dossier
+                </strong>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div
+                    id="aucunDossierMessage"
+                    class="text-muted text-center py-4"
+                >
+                    Sélectionnez un dossier pour afficher
+                    sa situation financière.
+                </div>
+
+
+                <div
+                    id="financialInfo"
+                    style="display: none;"
+                >
+
+                    <!-- DOSSIER -->
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Dossier
+                        </small>
+
+                        <div>
+                            <strong id="infoNumero">
+                                -
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- CLIENT -->
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Client
+                        </small>
+
+                        <div id="infoClient">
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- TOTAL -->
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Montant total
+                        </span>
+
+                        <strong>
+                            <span id="infoTotal">
+                                0.00
+                            </span>
+                            MAD
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PAYE -->
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Déjà payé
+                        </span>
+
+                        <strong class="text-success">
+                            <span id="infoPaye">
+                                0.00
+                            </span>
+                            MAD
+                        </strong>
+
+                    </div>
+
+
+                    <!-- AVANCE -->
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span>
+                            Avance versée
+                        </span>
+
+                        <strong>
+                            <span id="infoAvance">
+                                0.00
+                            </span>
+                            MAD
+                        </strong>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- RESTE -->
+
+                    <div class="d-flex justify-content-between">
+
+                        <strong>
+                            Reste à payer
+                        </strong>
+
+                        <strong class="text-danger">
+
+                            <span id="infoReste">
+                                0.00
+                            </span>
+
+                            MAD
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        id="dossierSolde"
+                        class="alert alert-success mt-3 mb-0"
+                        style="display: none;"
+                    >
+                        Dossier soldé
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================================= -->
+        <!-- REGLES BUSINESS -->
+        <!-- ============================================= -->
+
+        <div class="card shadow-sm mt-3">
+
+            <div class="card-body">
+
+                <strong>
+                    Règles de paiement
+                </strong>
+
+                <p class="small text-muted mt-2 mb-0">
+
+                    Un paiement ne peut pas dépasser
+                    le reste à payer.
+
+                    <br><br>
+
+                    Le type « Solde » doit correspondre
+                    exactement au reste à payer.
+
+                    <br><br>
+
+                    Un remboursement ne peut pas dépasser
+                    le montant net déjà payé.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- INFORMATIONS DU PAIEMENT EN MODIFICATION -->
+<!-- ===================================================== -->
+
+{% if paiement %}
+
+    <div
+        id="paiementEditData"
+        data-id="{{ paiement.id }}"
+        data-dossier="{{ paiement.dossier_id }}"
+        data-type="{{ paiement.type_paiement }}"
+        data-montant="{{ paiement.montant }}"
+        style="display: none;"
+    ></div>
+
+{% endif %}
+
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const dossierSelect =
+            document.getElementById(
+                "dossierSelect"
+            );
+
+        const typePaiement =
+            document.getElementById(
+                "typePaiement"
+            );
+
+        const montantInput =
+            document.getElementById(
+                "montantInput"
+            );
+
+        const montantHelp =
+            document.getElementById(
+                "montantHelp"
+            );
+
+        const financialInfo =
+            document.getElementById(
+                "financialInfo"
+            );
+
+        const aucunDossierMessage =
+            document.getElementById(
+                "aucunDossierMessage"
+            );
+
+        const dossierSolde =
+            document.getElementById(
+                "dossierSolde"
+            );
+
+        const paiementEditData =
+            document.getElementById(
+                "paiementEditData"
+            );
+
+
+        // ================================================
+        // DONNEES DU PAIEMENT ACTUEL
+        // ================================================
+
+        let isEdit = false;
+        let originalDossierId = null;
+        let originalType = null;
+        let originalMontant = 0;
+
+
+        if (paiementEditData) {
+
+            isEdit = true;
+
+            originalDossierId =
+                paiementEditData.dataset.dossier;
+
+            originalType =
+                paiementEditData.dataset.type;
+
+            originalMontant =
+                parseFloat(
+                    paiementEditData.dataset.montant || 0
+                );
+
+        }
+
+
+        // ================================================
+        // GET SELECTED DOSSIER
+        // ================================================
+
+        function getSelectedDossier() {
+
+            return dossierSelect.options[
+                dossierSelect.selectedIndex
+            ];
+
+        }
+
+
+        // ================================================
+        // FORMAT MONEY
+        // ================================================
+
+        function formatAmount(value) {
+
+            const amount =
+                parseFloat(value || 0);
+
+            return amount.toFixed(2);
+
+        }
+
+
+        // ================================================
+        // CALCUL FINANCIER SANS LE PAIEMENT ACTUEL
+        // ================================================
+
+        function getFinancialSituation() {
+
+            const option =
+                getSelectedDossier();
+
+            if (
+                !option ||
+                !option.value
+            ) {
+
+                return null;
+
+            }
+
+
+            const total =
+                parseFloat(
+                    option.dataset.total || 0
+                );
+
+            let paye =
+                parseFloat(
+                    option.dataset.paye || 0
+                );
+
+            let reste =
+                parseFloat(
+                    option.dataset.reste || 0
+                );
+
+            let avance =
+                parseFloat(
+                    option.dataset.avance || 0
+                );
+
+
+            /*
+             * En modification, les valeurs data-paye,
+             * data-reste et data-avance contiennent déjà
+             * le paiement actuellement modifié.
+             *
+             * Si on reste sur le même dossier,
+             * on retire donc temporairement son effet.
+             */
+
+            if (
+                isEdit &&
+                String(option.value) ===
+                String(originalDossierId)
+            ) {
+
+                if (
+                    originalType ===
+                    "REMBOURSEMENT"
+                ) {
+
+                    /*
+                     * Un remboursement avait réduit
+                     * le montant payé.
+                     *
+                     * Pour obtenir la situation avant
+                     * ce remboursement, on le rajoute.
+                     */
+
+                    paye =
+                        paye + originalMontant;
+
+                    reste =
+                        Math.max(
+                            total - paye,
+                            0
+                        );
+
+                    /*
+                     * Dans le modèle actuel,
+                     * les remboursements réduisent
+                     * les avances en priorité.
+                     */
+
+                    avance =
+                        avance + originalMontant;
+
+                } else {
+
+                    /*
+                     * Le paiement actuel avait augmenté
+                     * le montant payé.
+                     *
+                     * On retire donc son effet.
+                     */
+
+                    paye =
+                        Math.max(
+                            paye - originalMontant,
+                            0
+                        );
+
+                    reste =
+                        Math.max(
+                            total - paye,
+                            0
+                        );
+
+
+                    if (
+                        originalType ===
+                        "AVANCE"
+                    ) {
+
+                        avance =
+                            Math.max(
+                                avance - originalMontant,
+                                0
+                            );
+
+                    }
+
+                }
+
+            }
+
+
+            return {
+                total: total,
+                paye: paye,
+                reste: reste,
+                avance: avance
+            };
+
+        }
+
+
+        // ================================================
+        // AFFICHAGE FINANCIER
+        // ================================================
+
+        function updateFinancialInfo() {
+
+            const option =
+                getSelectedDossier();
+
+            const situation =
+                getFinancialSituation();
+
+
+            if (
+                !option ||
+                !option.value ||
+                !situation
+            ) {
+
+                financialInfo.style.display =
+                    "none";
+
+                aucunDossierMessage.style.display =
+                    "block";
+
+                dossierSolde.style.display =
+                    "none";
+
+                montantHelp.innerText =
+                    "Sélectionnez d'abord un dossier.";
+
+                montantInput.removeAttribute(
+                    "max"
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "infoNumero"
+            ).innerText =
+                option.dataset.numero;
+
+
+            document.getElementById(
+                "infoClient"
+            ).innerText =
+                option.dataset.client;
+
+
+            document.getElementById(
+                "infoTotal"
+            ).innerText =
+                formatAmount(
+                    situation.total
+                );
+
+
+            document.getElementById(
+                "infoPaye"
+            ).innerText =
+                formatAmount(
+                    situation.paye
+                );
+
+
+            document.getElementById(
+                "infoReste"
+            ).innerText =
+                formatAmount(
+                    situation.reste
+                );
+
+
+            document.getElementById(
+                "infoAvance"
+            ).innerText =
+                formatAmount(
+                    situation.avance
+                );
+
+
+            financialInfo.style.display =
+                "block";
+
+            aucunDossierMessage.style.display =
+                "none";
+
+
+            if (
+                situation.reste <= 0
+            ) {
+
+                dossierSolde.style.display =
+                    "block";
+
+            } else {
+
+                dossierSolde.style.display =
+                    "none";
+
+            }
+
+
+            updateMontantRules();
+
+        }
+
+
+        // ================================================
+        // REGLES DU MONTANT
+        // ================================================
+
+        function updateMontantRules() {
+
+            const situation =
+                getFinancialSituation();
+
+
+            if (!situation) {
+
+                montantInput.removeAttribute(
+                    "max"
+                );
+
+                return;
+
+            }
+
+
+            const type =
+                typePaiement.value;
+
+
+            // ============================================
+            // REMBOURSEMENT
+            // ============================================
+
+            if (
+                type ===
+                "REMBOURSEMENT"
+            ) {
+
+                montantInput.max =
+                    situation.paye;
+
+                montantHelp.innerText =
+                    "Remboursement maximum : "
+                    + formatAmount(
+                        situation.paye
+                    )
+                    + " MAD";
+
+                return;
+
+            }
+
+
+            // ============================================
+            // SOLDE
+            // ============================================
+
+            if (
+                type ===
+                "SOLDE"
+            ) {
+
+                montantInput.max =
+                    situation.reste;
+
+                montantHelp.innerText =
+                    "Le solde doit être exactement de "
+                    + formatAmount(
+                        situation.reste
+                    )
+                    + " MAD";
+
+                return;
+
+            }
+
+
+            // ============================================
+            // AVANCE / PAIEMENT
+            // ============================================
+
+            montantInput.max =
+                situation.reste;
+
+            montantHelp.innerText =
+                "Montant maximum : "
+                + formatAmount(
+                    situation.reste
+                )
+                + " MAD";
+
+        }
+
+
+        // ================================================
+        // DOSSIER CHANGE
+        // ================================================
+
+        dossierSelect.addEventListener(
+            "change",
+            function () {
+
+                updateFinancialInfo();
+
+            }
+        );
+
+
+        // ================================================
+        // TYPE CHANGE
+        // ================================================
+
+        typePaiement.addEventListener(
+            "change",
+            function () {
+
+                updateMontantRules();
+
+            }
+        );
+
+
+        // ================================================
+        // INITIALISATION
+        // ================================================
+
+        updateFinancialInfo();
+
+    }
+);
+
+</script>
+
+
+{% endblock %}

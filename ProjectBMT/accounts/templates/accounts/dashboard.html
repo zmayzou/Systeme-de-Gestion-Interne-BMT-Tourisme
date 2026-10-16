@@ -1,0 +1,1961 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Dashboard - BMT Tourisme
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       DASHBOARD
+    ===================================================== */
+
+    .dashboard-wrap {
+        max-width: 1700px;
+        margin: 0 auto;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .dashboard-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 190px;
+        padding: 30px 32px;
+        border-radius: 25px;
+        background:
+            radial-gradient(
+                circle at 82% 10%,
+                rgba(83, 104, 199, .55),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(229, 35, 41, .20),
+                transparent 32%
+            ),
+            linear-gradient(
+                125deg,
+                #101b4f 0%,
+                #17276c 52%,
+                #263d99 100%
+            );
+        color: white;
+        box-shadow: 0 22px 50px rgba(16, 27, 79, .16);
+    }
+
+    .dashboard-hero::before {
+        content: "";
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        right: -100px;
+        top: -180px;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 50%;
+    }
+
+    .dashboard-hero::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: 35px;
+        bottom: -170px;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 50%;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 13px;
+        padding: 7px 11px;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 30px;
+        background: rgba(255,255,255,.08);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.75);
+    }
+
+    .hero-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #43d69d;
+        box-shadow: 0 0 0 5px rgba(67,214,157,.12);
+    }
+
+    .hero-title {
+        margin: 0;
+        max-width: 700px;
+        font-size: clamp(24px, 3vw, 36px);
+        font-weight: 800;
+        letter-spacing: -1.2px;
+    }
+
+    .hero-title span {
+        color: #aebaff;
+    }
+
+    .hero-text {
+        max-width: 650px;
+        margin-top: 10px;
+        margin-bottom: 0;
+        color: rgba(255,255,255,.62);
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .hero-agency {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .agency-glass {
+        min-width: 210px;
+        padding: 16px 18px;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 17px;
+        background: rgba(255,255,255,.08);
+        backdrop-filter: blur(10px);
+    }
+
+    .agency-glass-label {
+        margin-bottom: 5px;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: rgba(255,255,255,.48);
+    }
+
+    .agency-glass-value {
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .agency-glass-role {
+        margin-top: 4px;
+        color: rgba(255,255,255,.56);
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       SECTION HEADER
+    ===================================================== */
+
+    .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin: 28px 0 14px;
+    }
+
+    .section-kicker {
+        margin-bottom: 3px;
+        color: var(--bmt-blue);
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.3px;
+    }
+
+    .section-title {
+        margin: 0;
+        color: var(--bmt-text);
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: -.4px;
+    }
+
+    .section-description {
+        margin-top: 4px;
+        color: var(--bmt-muted);
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       KPI
+    ===================================================== */
+
+    .metric-card {
+        position: relative;
+        height: 100%;
+        min-height: 162px;
+        overflow: hidden;
+        padding: 20px;
+        border: 1px solid var(--bmt-border);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(25,39,87,.055);
+        transition: all .25s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 38px rgba(25,39,87,.10);
+    }
+
+    .metric-card::after {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        right: -45px;
+        bottom: -50px;
+        border-radius: 50%;
+        background: var(--metric-soft);
+    }
+
+    .metric-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .metric-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: var(--metric-soft);
+        color: var(--metric-color);
+        font-size: 19px;
+    }
+
+    .metric-arrow {
+        width: 31px;
+        height: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #f7f8fc;
+        color: #8991a7;
+        font-size: 12px;
+        transition: all .2s ease;
+    }
+
+    .metric-card:hover .metric-arrow {
+        color: white;
+        background: var(--metric-color);
+    }
+
+    .metric-label {
+        margin-top: 18px;
+        color: #858da1;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .metric-bottom {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        margin-top: 3px;
+    }
+
+    .metric-value {
+        color: #19223a;
+        font-size: 27px;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .metric-detail {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--metric-color);
+    }
+
+    .metric-blue {
+        --metric-color: #3048a5;
+        --metric-soft: #eef1ff;
+    }
+
+    .metric-red {
+        --metric-color: #e52329;
+        --metric-soft: #fff0f1;
+    }
+
+    .metric-orange {
+        --metric-color: #e78b25;
+        --metric-soft: #fff5e8;
+    }
+
+    .metric-green {
+        --metric-color: #138a65;
+        --metric-soft: #eaf8f3;
+    }
+
+
+    /* =====================================================
+       SERVICE CARDS
+    ===================================================== */
+
+    .service-card {
+        height: 100%;
+        padding: 19px;
+        border: 1px solid var(--bmt-border);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 8px 25px rgba(25,39,87,.04);
+        transition: all .22s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-3px);
+        border-color: #d9deed;
+        box-shadow: 0 14px 30px rgba(25,39,87,.08);
+    }
+
+    .service-header {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 17px;
+    }
+
+    .service-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 17px;
+    }
+
+    .service-icon.visa {
+        background: #eef1ff;
+        color: #3048a5;
+    }
+
+    .service-icon.ticket {
+        background: #fff0f1;
+        color: var(--bmt-red);
+    }
+
+    .service-icon.mission {
+        background: #eaf8f3;
+        color: #138a65;
+    }
+
+    .service-name {
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .service-sub {
+        margin-top: 2px;
+        color: var(--bmt-muted);
+        font-size: 9px;
+    }
+
+    .service-stat-row {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+    }
+
+    .service-number {
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 800;
+        color: #182139;
+    }
+
+    .service-status {
+        font-size: 9px;
+        color: var(--bmt-muted);
+    }
+
+    .service-status strong {
+        color: var(--bmt-text);
+    }
+
+    .service-link {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #f5f6fa;
+        color: var(--bmt-navy);
+        transition: all .2s ease;
+    }
+
+    .service-link:hover {
+        color: white;
+        background: var(--bmt-navy);
+    }
+
+
+    /* =====================================================
+       PANEL
+    ===================================================== */
+
+    .dash-panel {
+        height: 100%;
+        border: 1px solid var(--bmt-border);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(25,39,87,.05);
+        overflow: hidden;
+    }
+
+    .dash-panel-head {
+        min-height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 15px 19px;
+        border-bottom: 1px solid var(--bmt-border);
+    }
+
+    .panel-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .panel-icon {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 11px;
+        background: #eef1ff;
+        color: var(--bmt-blue);
+        font-size: 15px;
+    }
+
+    .panel-title {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .panel-subtitle {
+        margin-top: 2px;
+        color: var(--bmt-muted);
+        font-size: 9px;
+    }
+
+    .panel-view-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--bmt-blue);
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       RECENT DOSSIERS
+    ===================================================== */
+
+    .dossier-number {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .dossier-file-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: #f1f3fa;
+        color: var(--bmt-blue);
+        font-size: 13px;
+    }
+
+    .dossier-number a {
+        color: var(--bmt-text);
+        font-weight: 700;
+    }
+
+    .dossier-number a:hover {
+        color: var(--bmt-blue);
+    }
+
+    .client-name {
+        font-weight: 600;
+        color: #3c455d;
+    }
+
+    .service-pill {
+        display: inline-flex;
+        padding: 5px 8px;
+        border-radius: 7px;
+        background: #f3f5fa;
+        color: #606a83;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 8px;
+        border-radius: 30px;
+        font-size: 8px;
+        font-weight: 800;
+    }
+
+    .status-pill::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+    .status-nouveau {
+        background: #eef1ff;
+        color: #3048a5;
+    }
+
+    .status-nouveau::before {
+        background: #3048a5;
+    }
+
+    .status-en-cours {
+        background: #eaf8f3;
+        color: #138a65;
+    }
+
+    .status-en-cours::before {
+        background: #138a65;
+    }
+
+    .status-attente {
+        background: #fff6e9;
+        color: #d18420;
+    }
+
+    .status-attente::before {
+        background: #d18420;
+    }
+
+    .status-bloque,
+    .status-annule {
+        background: #fff0f1;
+        color: #d9252b;
+    }
+
+    .status-bloque::before,
+    .status-annule::before {
+        background: #d9252b;
+    }
+
+    .status-termine {
+        background: #eaf8f3;
+        color: #138a65;
+    }
+
+    .status-termine::before {
+        background: #138a65;
+    }
+
+
+    /* =====================================================
+       TIMELINE
+    ===================================================== */
+
+    .activity-list {
+        padding: 4px 19px 12px;
+    }
+
+    .activity-item {
+        position: relative;
+        display: flex;
+        gap: 12px;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f2f7;
+    }
+
+    .activity-item:last-child {
+        border-bottom: 0;
+    }
+
+    .activity-marker {
+        width: 35px;
+        height: 35px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 11px;
+        background: #f1f3fa;
+        color: var(--bmt-blue);
+        font-size: 13px;
+    }
+
+    .activity-marker.notification-new {
+        color: var(--bmt-red);
+        background: #fff0f1;
+    }
+
+    .activity-content {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .activity-title {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--bmt-text);
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .activity-title:hover {
+        color: var(--bmt-blue);
+    }
+
+    .activity-meta {
+        color: var(--bmt-muted);
+        font-size: 9px;
+        line-height: 1.5;
+    }
+
+    .new-dot {
+        width: 7px;
+        height: 7px;
+        flex-shrink: 0;
+        margin-top: 5px;
+        border-radius: 50%;
+        background: var(--bmt-red);
+        box-shadow: 0 0 0 4px rgba(229,35,41,.09);
+    }
+
+
+    /* =====================================================
+       EMPTY
+    ===================================================== */
+
+    .dashboard-empty {
+        padding: 38px 20px;
+        text-align: center;
+        color: var(--bmt-muted);
+    }
+
+    .dashboard-empty-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: #f4f6fa;
+        color: #a0a8bb;
+        font-size: 20px;
+    }
+
+    .dashboard-empty p {
+        margin: 0;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       QUICK ACTIONS
+    ===================================================== */
+
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .quick-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 12px;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 11px;
+        background: rgba(255,255,255,.08);
+        color: white;
+        font-size: 9px;
+        font-weight: 700;
+        transition: all .2s ease;
+    }
+
+    .quick-action:hover {
+        background: white;
+        color: var(--bmt-navy);
+        transform: translateY(-2px);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 991px) {
+
+        .hero-agency {
+            margin-top: 22px;
+            justify-content: flex-start;
+        }
+
+        .agency-glass {
+            width: 100%;
+        }
+
+    }
+
+    @media (max-width: 575px) {
+
+        .dashboard-hero {
+            padding: 24px 20px;
+            border-radius: 20px;
+        }
+
+        .hero-title {
+            font-size: 25px;
+        }
+
+        .section-head {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-wrap">
+
+
+    <!-- ================================================= -->
+    <!-- HERO -->
+    <!-- ================================================= -->
+
+    <section class="dashboard-hero">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <div class="hero-content">
+
+                    <div class="hero-eyebrow">
+
+                        <span class="hero-dot"></span>
+
+                        Espace opérationnel BMT
+
+                    </div>
+
+
+                    <h1 class="hero-title">
+
+                        Bonjour,
+
+                        <span>
+
+                            {% if request.user.first_name %}
+
+                                {{ request.user.first_name }}
+
+                            {% else %}
+
+                                {{ request.user.username }}
+
+                            {% endif %}
+
+                        </span>
+
+                    </h1>
+
+
+                    <p class="hero-text">
+
+                        Retrouvez en un coup d'œil l'activité de votre
+                        agence, vos dossiers, vos tâches et les opérations
+                        qui nécessitent votre attention.
+
+                    </p>
+
+
+                    <div class="quick-actions mt-4">
+
+                        {% if can_clients %}
+
+                            <a
+                                href="{% url 'client_list' %}"
+                                class="quick-action"
+                            >
+
+                                <i class="bi bi-person-vcard"></i>
+
+                                Clients
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if can_dossiers %}
+
+                            <a
+                                href="{% url 'dossier_list' %}"
+                                class="quick-action"
+                            >
+
+                                <i class="bi bi-folder2-open"></i>
+
+                                Dossiers
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if can_tasks %}
+
+                            <a
+                                href="{% url 'task_list' %}"
+                                class="quick-action"
+                            >
+
+                                <i class="bi bi-check2-square"></i>
+
+                                Mes tâches
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if employe %}
+
+                            <a
+                                href="{% url 'notification_list' %}"
+                                class="quick-action"
+                            >
+
+                                <i class="bi bi-bell"></i>
+
+                                Notifications
+
+                                {% if unread_notifications_count > 0 %}
+
+                                    <span>
+                                        {{ unread_notifications_count }}
+                                    </span>
+
+                                {% endif %}
+
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="hero-agency">
+
+                    <div class="agency-glass">
+
+                        <div class="agency-glass-label">
+                            Votre espace
+                        </div>
+
+
+                        <div class="agency-glass-value">
+
+                            {% if employe and employe.agence %}
+
+                                {{ employe.agence.nom }}
+
+                            {% elif request.user.is_superuser %}
+
+                                Administration globale
+
+                            {% else %}
+
+                                BMT Tourisme
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="agency-glass-role">
+
+                            {% if employe and employe.role %}
+
+                                {{ employe.role.nom }}
+
+                            {% elif request.user.is_superuser %}
+
+                                Super administrateur
+
+                            {% else %}
+
+                                Utilisateur
+
+                            {% endif %}
+
+
+                            {% if employe and employe.agence %}
+
+                                • {{ employe.agence.ville }}
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- INDICATEURS -->
+    <!-- ================================================= -->
+
+    <div class="section-head">
+
+        <div>
+
+            <div class="section-kicker">
+                Vue d'ensemble
+            </div>
+
+            <h2 class="section-title">
+                Indicateurs principaux
+            </h2>
+
+            <div class="section-description">
+                Les chiffres essentiels de votre activité.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-3">
+
+
+        <!-- CLIENTS -->
+
+        {% if can_clients %}
+
+            <div class="col-sm-6 col-xl-3">
+
+                <a href="{% url 'client_list' %}">
+
+                    <div class="metric-card metric-blue">
+
+                        <div class="metric-top">
+
+                            <div class="metric-icon">
+                                <i class="bi bi-people"></i>
+                            </div>
+
+                            <div class="metric-arrow">
+                                <i class="bi bi-arrow-up-right"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-label">
+                            Clients enregistrés
+                        </div>
+
+
+                        <div class="metric-bottom">
+
+                            <div class="metric-value">
+                                {{ total_clients }}
+                            </div>
+
+                            <div class="metric-detail">
+                                Voir les clients
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- DOSSIERS -->
+
+        {% if can_dossiers %}
+
+            <div class="col-sm-6 col-xl-3">
+
+                <a href="{% url 'dossier_list' %}">
+
+                    <div class="metric-card metric-red">
+
+                        <div class="metric-top">
+
+                            <div class="metric-icon">
+                                <i class="bi bi-folder2-open"></i>
+                            </div>
+
+                            <div class="metric-arrow">
+                                <i class="bi bi-arrow-up-right"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-label">
+                            Dossiers
+                        </div>
+
+
+                        <div class="metric-bottom">
+
+                            <div class="metric-value">
+                                {{ total_dossiers }}
+                            </div>
+
+                            <div class="metric-detail">
+                                {{ dossiers_en_cours }} en cours
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- TASKS -->
+
+        {% if can_tasks %}
+
+            <div class="col-sm-6 col-xl-3">
+
+                <a href="{% url 'task_list' %}">
+
+                    <div class="metric-card metric-orange">
+
+                        <div class="metric-top">
+
+                            <div class="metric-icon">
+                                <i class="bi bi-check2-square"></i>
+                            </div>
+
+                            <div class="metric-arrow">
+                                <i class="bi bi-arrow-up-right"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-label">
+                            Mes tâches
+                        </div>
+
+
+                        <div class="metric-bottom">
+
+                            <div class="metric-value">
+                                {{ total_taches }}
+                            </div>
+
+                            <div class="metric-detail">
+                                {{ taches_a_faire }} à faire
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- PAYMENTS -->
+
+        {% if can_payments %}
+
+            <div class="col-sm-6 col-xl-3">
+
+                <a href="{% url 'paiement_list' %}">
+
+                    <div class="metric-card metric-green">
+
+                        <div class="metric-top">
+
+                            <div class="metric-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+
+                            <div class="metric-arrow">
+                                <i class="bi bi-arrow-up-right"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-label">
+                            Opérations de paiement
+                        </div>
+
+
+                        <div class="metric-bottom">
+
+                            <div class="metric-value">
+                                {{ total_paiements }}
+                            </div>
+
+                            <div class="metric-detail">
+                                Finance
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SERVICES -->
+    <!-- ================================================= -->
+
+    {% if can_visa or can_ticketing or can_missions %}
+
+        <div class="section-head">
+
+            <div>
+
+                <div class="section-kicker">
+                    Services
+                </div>
+
+                <h2 class="section-title">
+                    Activité opérationnelle
+                </h2>
+
+                <div class="section-description">
+                    Suivi rapide des principaux services.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-3">
+
+
+            <!-- VISA -->
+
+            {% if can_visa %}
+
+                <div class="col-md-4">
+
+                    <div class="service-card">
+
+                        <div class="service-header">
+
+                            <div class="service-icon visa">
+                                <i class="bi bi-passport"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="service-name">
+                                    Visa
+                                </div>
+
+                                <div class="service-sub">
+                                    Gestion des demandes
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-stat-row">
+
+                            <div>
+
+                                <div class="service-number">
+                                    {{ total_visas }}
+                                </div>
+
+                                <div class="service-status mt-2">
+
+                                    <strong>
+                                        {{ visas_en_traitement }}
+                                    </strong>
+                                    en traitement
+
+                                    &nbsp;•&nbsp;
+
+                                    <strong>
+                                        {{ visas_acceptes }}
+                                    </strong>
+                                    acceptés
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'visa_list' %}"
+                                class="service-link"
+                            >
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- TICKETING -->
+
+            {% if can_ticketing %}
+
+                <div class="col-md-4">
+
+                    <div class="service-card">
+
+                        <div class="service-header">
+
+                            <div class="service-icon ticket">
+                                <i class="bi bi-ticket-perforated"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="service-name">
+                                    Billetterie
+                                </div>
+
+                                <div class="service-sub">
+                                    Réservations & billets
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-stat-row">
+
+                            <div>
+
+                                <div class="service-number">
+                                    {{ total_billets }}
+                                </div>
+
+                                <div class="service-status mt-2">
+
+                                    <strong>
+                                        {{ billets_emis }}
+                                    </strong>
+                                    billets émis
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'billet_list' %}"
+                                class="service-link"
+                            >
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- MISSIONS -->
+
+            {% if can_missions %}
+
+                <div class="col-md-4">
+
+                    <div class="service-card">
+
+                        <div class="service-header">
+
+                            <div class="service-icon mission">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="service-name">
+                                    Missions guides
+                                </div>
+
+                                <div class="service-sub">
+                                    Suivi des déplacements
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-stat-row">
+
+                            <div>
+
+                                <div class="service-number">
+                                    {{ total_missions }}
+                                </div>
+
+                                <div class="service-status mt-2">
+
+                                    <strong>
+                                        {{ missions_en_cours }}
+                                    </strong>
+                                    en cours
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'mission_list' %}"
+                                class="service-link"
+                            >
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ================================================= -->
+    <!-- DOSSIERS RECENTS -->
+    <!-- ================================================= -->
+
+    {% if can_dossiers %}
+
+        <div class="section-head">
+
+            <div>
+
+                <div class="section-kicker">
+                    Dossiers
+                </div>
+
+                <h2 class="section-title">
+                    Activité récente
+                </h2>
+
+                <div class="section-description">
+                    Les derniers dossiers enregistrés dans le système.
+                </div>
+
+            </div>
+
+
+            <a
+                href="{% url 'dossier_list' %}"
+                class="btn btn-outline-primary"
+            >
+
+                Tous les dossiers
+
+                <i class="bi bi-arrow-right ms-1"></i>
+
+            </a>
+
+        </div>
+
+
+        <div class="dash-panel">
+
+            <div class="dash-panel-head">
+
+                <div class="panel-title-wrap">
+
+                    <div class="panel-icon">
+                        <i class="bi bi-folder2-open"></i>
+                    </div>
+
+                    <div>
+
+                        <h3 class="panel-title">
+                            Derniers dossiers
+                        </h3>
+
+                        <div class="panel-subtitle">
+                            Dossiers récemment créés
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Dossier
+                            </th>
+
+                            <th>
+                                Client
+                            </th>
+
+                            <th>
+                                Service
+                            </th>
+
+                            <th>
+                                Statut
+                            </th>
+
+                            <th class="text-end">
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for dossier in derniers_dossiers %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="dossier-number">
+
+                                        <div class="dossier-file-icon">
+                                            <i class="bi bi-folder"></i>
+                                        </div>
+
+                                        <a
+                                            href="{% url 'dossier_detail' dossier.id %}"
+                                        >
+                                            {{ dossier.numero_dossier }}
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="client-name">
+                                        {{ dossier.client }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="service-pill">
+                                        {{ dossier.get_type_service_display }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if dossier.statut == 'NOUVEAU' %}
+
+                                        <span class="status-pill status-nouveau">
+                                            Nouveau
+                                        </span>
+
+                                    {% elif dossier.statut == 'EN_COURS' %}
+
+                                        <span class="status-pill status-en-cours">
+                                            En cours
+                                        </span>
+
+                                    {% elif dossier.statut == 'EN_ATTENTE' %}
+
+                                        <span class="status-pill status-attente">
+                                            En attente
+                                        </span>
+
+                                    {% elif dossier.statut == 'BLOQUE' %}
+
+                                        <span class="status-pill status-bloque">
+                                            Bloqué
+                                        </span>
+
+                                    {% elif dossier.statut == 'TERMINE' %}
+
+                                        <span class="status-pill status-termine">
+                                            Terminé
+                                        </span>
+
+                                    {% elif dossier.statut == 'ANNULE' %}
+
+                                        <span class="status-pill status-annule">
+                                            Annulé
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="service-pill">
+                                            {{ dossier.get_statut_display }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td class="text-end">
+
+                                    <a
+                                        href="{% url 'dossier_detail' dossier.id %}"
+                                        class="btn btn-sm btn-light"
+                                        title="Ouvrir le dossier"
+                                    >
+
+                                        <i class="bi bi-arrow-up-right"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td colspan="5">
+
+                                    <div class="dashboard-empty">
+
+                                        <div class="dashboard-empty-icon">
+                                            <i class="bi bi-folder2-open"></i>
+                                        </div>
+
+                                        <p>
+                                            Aucun dossier disponible.
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ================================================= -->
+    <!-- TASKS + NOTIFICATIONS -->
+    <!-- ================================================= -->
+
+    {% if can_tasks or employe %}
+
+        <div class="row g-3 mt-3">
+
+
+            <!-- ========================================= -->
+            <!-- TASKS -->
+            <!-- ========================================= -->
+
+            {% if can_tasks %}
+
+                <div class="col-lg-6">
+
+                    <div class="dash-panel">
+
+                        <div class="dash-panel-head">
+
+                            <div class="panel-title-wrap">
+
+                                <div class="panel-icon">
+                                    <i class="bi bi-check2-square"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3 class="panel-title">
+                                        Mes dernières tâches
+                                    </h3>
+
+                                    <div class="panel-subtitle">
+                                        Travail à suivre
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'task_list' %}"
+                                class="panel-view-all"
+                            >
+
+                                Voir tout
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="activity-list">
+
+                            {% for tache in dernieres_taches %}
+
+                                <div class="activity-item">
+
+                                    <div class="activity-marker">
+
+                                        {% if tache.statut == 'TERMINEE' %}
+
+                                            <i class="bi bi-check-lg"></i>
+
+                                        {% elif tache.statut == 'EN_COURS' %}
+
+                                            <i class="bi bi-hourglass-split"></i>
+
+                                        {% else %}
+
+                                            <i class="bi bi-list-check"></i>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="activity-content">
+
+                                        <a
+                                            href="{% url 'task_detail' tache.id %}"
+                                            class="activity-title"
+                                        >
+                                            {{ tache.titre }}
+                                        </a>
+
+
+                                        <div class="activity-meta">
+
+                                            <i class="bi bi-folder2 me-1"></i>
+
+                                            {{ tache.dossier.numero_dossier }}
+
+                                            &nbsp;•&nbsp;
+
+                                            {{ tache.get_statut_display }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            {% empty %}
+
+                                <div class="dashboard-empty">
+
+                                    <div class="dashboard-empty-icon">
+                                        <i class="bi bi-check2-square"></i>
+                                    </div>
+
+                                    <p>
+                                        Aucune tâche pour le moment.
+                                    </p>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ========================================= -->
+            <!-- NOTIFICATIONS -->
+            <!-- ========================================= -->
+
+            {% if employe %}
+
+                <div class="col-lg-6">
+
+                    <div class="dash-panel">
+
+                        <div class="dash-panel-head">
+
+                            <div class="panel-title-wrap">
+
+                                <div class="panel-icon">
+                                    <i class="bi bi-bell"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3 class="panel-title">
+                                        Notifications
+                                    </h3>
+
+                                    <div class="panel-subtitle">
+
+                                        {% if unread_notifications_count > 0 %}
+
+                                            {{ unread_notifications_count }}
+                                            non lue{{ unread_notifications_count|pluralize }}
+
+                                        {% else %}
+
+                                            Vous êtes à jour
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="{% url 'notification_list' %}"
+                                class="panel-view-all"
+                            >
+
+                                Voir tout
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="activity-list">
+
+                            {% for notification in dernieres_notifications %}
+
+                                <div class="activity-item">
+
+                                    <div
+                                        class="
+                                            activity-marker
+                                            {% if not notification.est_lue %}
+                                                notification-new
+                                            {% endif %}
+                                        "
+                                    >
+
+                                        {% if not notification.est_lue %}
+
+                                            <i class="bi bi-bell-fill"></i>
+
+                                        {% else %}
+
+                                            <i class="bi bi-bell"></i>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="activity-content">
+
+                                        <div class="activity-title">
+                                            {{ notification.titre }}
+                                        </div>
+
+
+                                        <div class="activity-meta">
+                                            {{ notification.message|truncatechars:120 }}
+                                        </div>
+
+                                    </div>
+
+
+                                    {% if not notification.est_lue %}
+
+                                        <div class="new-dot"></div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% empty %}
+
+                                <div class="dashboard-empty">
+
+                                    <div class="dashboard-empty-icon">
+                                        <i class="bi bi-bell"></i>
+                                    </div>
+
+                                    <p>
+                                        Aucune notification.
+                                    </p>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ================================================= -->
+    <!-- DJANGO ADMIN ACCOUNT -->
+    <!-- ================================================= -->
+
+    {% if not employe %}
+
+        <div class="alert alert-info mt-4">
+
+            <i class="bi bi-info-circle me-2"></i>
+
+            Vous êtes connecté avec un compte administrateur Django.
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

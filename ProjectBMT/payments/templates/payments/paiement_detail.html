@@ -1,0 +1,99 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}
+Paiement - BMT Tourisme
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2>Détail du paiement</h2>
+
+        <p class="text-muted mb-0">
+            Dossier {{ paiement.dossier.numero_dossier }}
+        </p>
+    </div>
+
+    <div>
+
+        <a
+            href="{% url 'paiement_update' paiement.id %}"
+            class="btn btn-warning"
+        >
+            Modifier
+        </a>
+
+        <a
+            href="{% url 'paiement_list' %}"
+            class="btn btn-secondary"
+        >
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <strong>Dossier :</strong><br>
+                {{ paiement.dossier.numero_dossier }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Client :</strong><br>
+
+                {{ paiement.dossier.client.nom }}
+                {{ paiement.dossier.client.prenom }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Type :</strong><br>
+                {{ paiement.get_type_paiement_display }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Montant :</strong><br>
+                {{ paiement.montant }} MAD
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Mode :</strong><br>
+                {{ paiement.get_mode_paiement_display }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Référence :</strong><br>
+                {{ paiement.reference|default:"-" }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Enregistré par :</strong><br>
+                {{ paiement.enregistre_par|default:"-" }}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Date :</strong><br>
+                {{ paiement.date_paiement|date:"d/m/Y H:i" }}
+            </div>
+
+            <div class="col-12">
+                <strong>Commentaire :</strong><br>
+                {{ paiement.commentaire|default:"Aucun commentaire." }}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
